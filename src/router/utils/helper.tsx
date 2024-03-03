@@ -14,7 +14,7 @@ export function layoutRoutes(routes: RouteObject[]): RouteObject[] {
   for (let i = 0; i < routes.length; i++) {
     const { path } = routes[i];
     // 路径为登录页不添加layouts
-    if (path !== 'login') {
+    if (path !== 'login' && path !== 'register') {
       layouts.push(routes[i]);
     }
   }
@@ -35,7 +35,7 @@ export function handleRoutes(routes: Record<string, () => Promise<DefaultCompone
     if (isExclude) continue;
 
     const path = getRouterPage(key);
-    if (path === '/login') continue;
+    if (path === '/login' || path === '/register') continue;
 
     const ComponentNode = loadable(routes[key], {
       fallback: <Skeleton

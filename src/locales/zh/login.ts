@@ -7,4 +7,8 @@ export default {
   confirmPasswordMessage: '密码和确认密码不相同!',
   notPermissions: '用户暂无权限登录',
   passwordRuleMessage: '密码为6-30位必须包含字母和数字!',
+  register: '注册',
+  registerUser: '账号注册',
+  haveUser: '已有账号？',
+  directLogin: '直接登录',
 };

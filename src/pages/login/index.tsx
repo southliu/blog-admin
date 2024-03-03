@@ -141,6 +141,11 @@ function Login() {
     console.error('错误信息:', errors);
   };
 
+  /** 点击注册 */
+  const onRegister = () => {
+    navigate('/register');
+  };
+
   return (
     <>
       { contextHolder }
@@ -219,13 +224,22 @@ function Login() {
               <Button
                 type="primary"
                 htmlType="submit"
-                className="w-full mt-5px rounded-5px tracking-2px"
+                className="w-full mt-5px rounded-5px tracking-2px mb-10px"
                 loading={isLoading}
               >
                 { t('login.login') }
               </Button>
             </Form.Item>
           </Form>
+
+          <div className='flex justify-end absolute bottom-10px right-30px'>
+            <div
+              className='cursor-pointer text-14px text-blue-700'
+              onClick={onRegister}
+            >
+              { t('login.register') }
+            </div>
+          </div>
         </div>
       </div>
     </>

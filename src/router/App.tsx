@@ -4,6 +4,7 @@ import { handleRoutes } from "./utils/helper";
 import { useRoutes } from "react-router-dom";
 import Layout from '@/layouts';
 import Login from '@/pages/login';
+import Register from '@/pages/register';
 import NotFound from '@/pages/404';
 
 type PageFiles = Record<string, () => Promise<DefaultComponent<unknown>>>;
@@ -14,6 +15,10 @@ const newRoutes: RouteObject[] = [
   {
     path: "login",
     element: <Login />
+  },
+  {
+    path: "register",
+    element: <Register />
   },
   {
     path: "",
