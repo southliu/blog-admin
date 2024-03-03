@@ -4,10 +4,10 @@ enum API {
   COMMON_URL = '/authority/common',
 }
 
-interface Result {
+interface ResultData {
   id: string;
   name: string;
-  children?: Result[];
+  children?: ResultData[];
 }
 
 /**
@@ -15,7 +15,7 @@ interface Result {
  * @param data - 请求数据
  */
 export function getGames(data?: unknown) {
-  return request.get<Result[]>(
+  return request.get<ResultData[]>(
     `${API.COMMON_URL}/games`,
     { params: data }
   );

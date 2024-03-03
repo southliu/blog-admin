@@ -1,37 +1,36 @@
-import type { Key } from 'react';
-import type { DataNode } from 'antd/es/tree';
-import type { FormData } from '#/form';
-import type { PageServerResult, PaginationData, SideMenu } from '#/public';
+import type { SystemMenuTree } from '@/pages/system/menu/model';
+import type { DataNode } from 'ant-design-vue/lib/tree';
+import type { Key } from 'ant-design-vue/lib/vc-tree/interface';
 import { request } from '@/servers/request';
 
 enum API {
-  URL = '/authority/menu'
+  URL = '/authority/menu',
 }
 
 /**
- * 获取分页数据
+ * 获取树形数据
  * @param data - 请求数据
  */
-export function getMenuPage(data: Partial<FormData> & PaginationData) {
-  return request.get<PageServerResult<FormData[]>>(
-    `${API.URL}/page`,
-    { params: data }
-  );
+export function getSystemMenuTree(data?: unknown) {
+  return request.get<SystemMenuTree[]>(
+  `${API.URL}/list`,
+  { params: data }
+);
 }
 
 /**
  * 根据ID获取数据
- * @param id - ID
+ * @param id - 唯一标识
  */
-export function getMenuById(id: string) {
-  return request.get<FormData>(`${API.URL}/detail?id=${id}`);
+export function getSystemMenuById(id: string) {
+  return request.get(`${API.URL}/detail?id=${id}`);
 }
 
 /**
  * 新增数据
  * @param data - 请求数据
  */
-export function createMenu(data: FormData) {
+export function createSystemMenu(data: unknown) {
   return request.post(API.URL, data);
 }
 
@@ -40,7 +39,7 @@ export function createMenu(data: FormData) {
  * @param id - 修改id值
  * @param data - 请求数据
  */
-export function updateMenu(id: string, data: FormData) {
+export function updateSystemMenu(id: string, data: unknown) {
   return request.put(`${API.URL}/${id}`, data);
 }
 
@@ -48,7 +47,7 @@ export function updateMenu(id: string, data: FormData) {
  * 删除
  * @param id - 删除id值
  */
-export function deleteMenu(id: string) {
+ export function deleteSystemMenu(id: string) {
   return request.delete(`${API.URL}/${id}`);
 }
 
@@ -56,26 +55,17 @@ export function deleteMenu(id: string) {
  * 获取权限列表
  * @param data - 搜索数据
  */
-interface PermissionResult {
-  treeData: DataNode[];
-  defaultCheckedKeys: Key[];
-}
-export function getPermission(data: object) {
-  return request.get<PermissionResult>(`${API.URL}/tree`, { params: data });
+ export function getPermission(data: unknown) {
+  return request.get<{
+    defaultCheckedKeys: Key[];
+    treeData: DataNode[];
+  }>(`${API.URL}/tree`, { params: data });
 }
 
 /**
  * 保存权限列表
  * @param data - 权限数据
  */
-export function savePermission(data: object) {
+export function savePermission(data: unknown) {
   return request.put(`${API.URL}/authorize/save`, data);
-}
-
-/**
- * 获取当前菜单数据
- * @param data - 请求数据
- */
-export function getMenuList() {
-  return request.get<SideMenu[]>(`/menu/list`);
 }

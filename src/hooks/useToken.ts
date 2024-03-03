@@ -1,13 +1,16 @@
+import { ref } from 'vue';
 import { TOKEN } from '@/utils/config';
 import { setLocalInfo, getLocalInfo, removeLocalInfo } from '@/utils/local';
 
 /**
  * token存取方法
  */
-export function useToken() {
+ export function useToken() {
+  const token = ref(getLocalInfo(TOKEN) || '');
+
   /** 获取token */
   const getToken = () => {
-    return getLocalInfo<string>(TOKEN) || '';
+    return getLocalInfo(TOKEN);
   };
 
   /**
@@ -16,12 +19,19 @@ export function useToken() {
    */
   const setToken = (value: string) => {
     setLocalInfo(TOKEN, value);
+    token.value = value;
   };
 
   /** 删除token */
    const removeToken = () => {
     removeLocalInfo(TOKEN);
+    token.value = '';
   };
 
-  return [getToken, setToken, removeToken] as const;
+  return {
+    token,
+    getToken,
+    setToken,
+    removeToken
+  };
 }

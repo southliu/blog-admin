@@ -4,29 +4,22 @@
  * 修改主题
  * @param color - 字体颜色
  * @param bgColor - 背景颜色
- * @param layoutContentBg - layout内容背景色
- * @param contentBgColor - 内容背景颜色
  * @param svgColor - svg颜色
+ * @param layoutContentBg - layout内容背景色
  */
 .changeTheme(
   @color: @primaryColor,
   @bgColor: @primaryBg,
+  @svgColor: @svgColor,
   @layoutContentBg: @layoutContentBg,
-  @contentBgColor: @contentBg,
-  @svgColor: @svgColor
 ) {
   color: @color !important;
-  background-color: @bgColor !important;
+  background: @bgColor !important;
 
-  .bg {
-    background-color: @bgColor !important;
-  }
-
-  .change svg {
+  .change-icon {
     color: @svgColor !important;
   }
 
-  a,
   h1,
   h2,
   h3,
@@ -36,26 +29,25 @@
     color: @color !important;
   }
 
+  #searches,
+  #pagination,
+  .theme-bg,
+  .layout-header {
+    color: @color !important;
+    background: @bgColor !important;
+  }
+
+  // antd
+  .ant-tabs,
+  .ant-pagination {
+    color: @color !important;
+  }
+
   #layoutContent {
     background-color: @layoutContentBg !important;
   }
 
-  #content {
-    background-color: @contentBgColor !important;
-  }
-
-  // 富文本
-  .w-e-toolbar,
-  .w-e-bar-item button,
-  .w-e-text-container {
-    fill: @color !important;
+  #searches .ant-form-item-label > label {
     color: @color !important;
-    background-color: @bgColor !important;
-  }
-
-  #header,
-  #layout {
-    color: @color !important;
-    background-color: @bgColor !important;
   }
 }

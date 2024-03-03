@@ -1,106 +1,121 @@
 import type { FormList } from "#/form";
-import type { TFunction } from "i18next";
-import type { TableColumn, TableOptions } from '#/public';
-import { FORM_REQUIRED } from '@/utils/config';
-import CustomizeInput from './components/CustomizeInput';
+import type { TableColumnsProps } from "#/public";
+import { FORM_REQUIRED } from "@/utils/config";
+import CustomizeInput from "./components/CustomizeInput.vue";
+
+// 父路径
+export const fatherPath = '/content/article';
+
+// 权限前缀
+const permissionPrefix = '/content/article';
+
+// 权限
+export const pagePermission = {
+  page: `${permissionPrefix}/index`,
+  create: `${permissionPrefix}/create`,
+  update: `${permissionPrefix}/update`,
+  delete: `${permissionPrefix}/delete`
+};
 
 // 搜索数据
-export const searchList = (t: TFunction): FormList[] => [
+export const searchList: FormList[] = [
   {
-    label: t('login.username'),
+    label: '用户名',
     name: 'username',
     component: 'Input'
   },
   {
-    label: t('public.title'),
+    label: '标题',
     name: 'title',
     component: 'Input'
   }
 ];
 
-/**
- * 表格数据
- * @param optionRender - 渲染操作函数
- */
-export const tableColumns = (t: TFunction, optionRender: TableOptions<object>): TableColumn => {
-  return [
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      width: 400,
-      fixed: 'left'
-    },
-    {
-      title: t('login.username'),
-      dataIndex: 'username',
-      width: 400,
-      fixed: 'left'
-    },
-    {
-      title: t('public.title'),
-      dataIndex: 'title',
-      width: 400
-    },
-    {
-      title: t('public.content'),
-      dataIndex: 'content',
-      width: 400
-    },
-    {
-      title: t('public.operate'),
-      dataIndex: 'operate',
-      width: 200,
-      fixed: 'right',
-      render: (value: unknown, record: object) => optionRender(value, record)
-    },
-  ];
-};
+// 表格数据
+export const tableColumns: TableColumnsProps[] = [
+  {
+    title: 'ID',
+    dataIndex: 'id'
+  },
+  {
+    title: '用户名',
+    dataIndex: 'username',
+  },
+  {
+    title: '标题',
+    dataIndex: 'title'
+  },
+  {
+    title: '内容',
+    dataIndex: 'content'
+  },
+  {
+    title: '操作',
+    dataIndex: 'operate',
+    width: 160,
+    ellipsis: false,
+  }
+];
 
 // 新增数据
-export const createList = (t: TFunction): FormList[] => [
+export const createList: FormList[] = [
   {
-    label: t('login.username'),
+    label: '用户名',
     name: 'username',
     rules: FORM_REQUIRED,
     component: 'Input',
     componentProps: {
+      maxlength: 32,
       style: {
-        width: '80%'
+        width: '90%'
       }
     }
   },
   {
-    label: t('content.nestedData'),
+    label: '嵌套数据',
     name: ['user', 'name', 'test'],
     rules: FORM_REQUIRED,
     component: 'Input',
-    unit: '单位',
-    extra: '这是描述，这是描述，这是描述。',
     componentProps: {
+      maxlength: 32,
       style: {
-        width: '80%'
+        width: '90%'
       }
     }
   },
   {
-    label: t('public.title'),
+    label: '标题',
     name: 'title',
     rules: FORM_REQUIRED,
     component: 'customize',
     render: CustomizeInput,
     componentProps: {
+      maxlength: 32,
       style: {
-        width: '80%'
+        width: '90%'
       }
     }
   },
   {
-    label: t('public.content'),
+    label: 'DEMO',
+    name: 'demo',
+    unit: '单位',
+    extra: '我是说明,我是说明.',
+    component: 'Input',
+    componentProps: {
+      maxlength: 32,
+      style: {
+        width: '90%'
+      }
+    }
+  },
+  {
+    label: '内容',
     name: 'content',
     component: 'Editor',
     componentProps: {
       style: {
-        width: '80%'
+        width: '90%'
       }
     }
   }

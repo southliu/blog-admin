@@ -69,10 +69,10 @@
       { "severity": "warning" }
     ]
   },
-  "ignoreFiles": ["**/*.js", "**/*.ts"],
+  "ignoreFiles": ["**/*.js", "**/*.jsx", "**/*.tsx", "**/*.ts"],
   "overrides": [
     {
-      "files": ["*.tsx", "**/*.tsx", "*.html", "**/*.html"],
+      "files": ["*.vue", "**/*.vue", "*.html", "**/*.html"],
       "extends": ["stylelint-config-recommended"],
       "rules": {
         "keyframes-name-pattern": null,
@@ -81,13 +81,19 @@
           {
             "ignorePseudoClasses": ["deep", "global"]
           }
+        ],
+        "selector-pseudo-element-no-unknown": [
+          true,
+          {
+            "ignorePseudoElements": ["v-deep", "v-global", "v-slotted"]
+          }
         ]
       }
     },
     {
       "files": ["*.less", "**/*.less"],
       "customSyntax": "postcss-less",
-      "extends": ["stylelint-config-standard", "stylelint-config-recommended-less"]
+      "extends": ["stylelint-config-standard", "stylelint-config-recommended-vue"]
     }
   ]
 }

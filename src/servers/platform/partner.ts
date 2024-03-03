@@ -4,7 +4,7 @@ enum API {
   URL = '/platform/partner',
 }
 
-interface Result {
+interface ResultData {
   id: string;
   name: string;
 }
@@ -14,8 +14,8 @@ interface Result {
  * @param data - 请求数据
  */
 export function getPartner(data?: unknown) {
-  return request.get<Result[]>(
-    API.URL,
+  return request.get<ResultData[]>(
+    `${API.URL}`,
     { params: data }
   );
 }

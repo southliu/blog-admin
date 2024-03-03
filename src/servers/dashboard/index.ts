@@ -1,3 +1,4 @@
+import type { DashboardResult } from '@/pages/system/dashboard/model';
 import { request } from '@/servers/request';
 
 /**
@@ -5,5 +6,8 @@ import { request } from '@/servers/request';
  * @param data - 请求数据
  */
 export function getDataTrends(data: object) {
-  return request.get('/dashboard', { params: data });
+  return request.get<DashboardResult>(
+    '/dashboard',
+    { params: data }
+  );
 }

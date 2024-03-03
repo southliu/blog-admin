@@ -1,8 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { defineStore } from 'pinia';
 
-export const userSlice = createSlice({
-  name: 'user',
-  initialState: {
+interface UserDataInfo {
+  id: number;
+  username: string;
+  email: string;
+  phone: string;
+}
+
+interface StateData {
+  permissions: string[];
+  userInfo: UserDataInfo;
+}
+
+export const useUserStore = defineStore({
+  id: 'user',
+  state: () => ({
     // 用户权限
     permissions: [],
     // 用户信息
@@ -12,32 +24,44 @@ export const userSlice = createSlice({
       email: '',
       phone: ''
     }
-  },
-  reducers: {
-    /** 设置用户信息 */
-    setUserInfo: (state, action) => {
-      state.userInfo = action.payload;
+  } as StateData),
+  actions: {
+    /**
+     * 设置用户权限
+     * @param permissions - 权限
+     */
+    setPermissions(permissions: string[]) {
+      this.permissions = permissions;
     },
-    /** 设置权限 */
-    setPermissions: (state, action) => {
-      state.permissions = action.payload;
+    /**
+     * 获取用户权限
+     */
+    getPermissions() {
+      return this.permissions;
     },
-    /** 清除用户信息 */
-    clearInfo: (state) => {
-      state.userInfo = {
+    /**
+     * 设置用户信息
+     * @param userInfo - 用户值
+     */
+    setUserInfo(userInfo: UserDataInfo) {
+      this.userInfo = userInfo;
+    },
+    /**
+     * 获取用户信息
+     */
+    getUserInfo() {
+      return this.userInfo;
+    },
+    /**
+     * 清除用户信息
+     */
+    clearInfo() {
+      this.userInfo = {
         id: 0,
         username: '',
         email: '',
         phone: ''
       };
     }
-  }
+  },
 });
-
-export const {
-  setUserInfo,
-  setPermissions,
-  clearInfo
-} = userSlice.actions;
-
-export default userSlice.reducer;

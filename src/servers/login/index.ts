@@ -1,4 +1,5 @@
 import type { LoginData, LoginResult } from '@/pages/login/model';
+import { RegisterData } from '@/pages/register/model';
 import { request } from '@/servers/request';
 
 /**
@@ -13,6 +14,14 @@ export function login(data: LoginData) {
  * 修改密码
  * @param data - 请求数据
  */
-export function updatePassword(data: object) {
+export function updatePassword(data: unknown) {
   return request.post('/update-password', data);
+}
+
+/**
+ * 注册
+ * @param data - 请求数据
+ */
+export function getRegisterCode(data: RegisterData) {
+  return request.get<LoginResult>('/register-captcha', { params: data });
 }

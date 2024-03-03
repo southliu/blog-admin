@@ -5,7 +5,7 @@ export interface LoginData {
 }
 
 // 用户数据
-interface User {
+interface UserData {
   id: number;
   username: string;
   phone: string;
@@ -13,7 +13,7 @@ interface User {
 }
 
 // 授权数据
-export interface Permissions {
+export interface PermissionsData {
   id: string;
   operation: string[];
 }
@@ -26,7 +26,7 @@ interface Roles {
 // 接口返回数据
 export interface LoginResult {
   token: string;
-  user: User;
-  permissions: Permissions[];
+  user: UserData;
+  permissions: PermissionsData[];
   roles: Roles[];
 }

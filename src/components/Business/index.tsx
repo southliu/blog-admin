@@ -1,12 +1,15 @@
 import { addComponent } from "../Form/utils/componentMap";
-import GameSelect from "./Selects/GameSelect";
-import PartnerSelect from "./Selects/PartnerSelect";
+import GameSelect from './Selects/GameSelect.vue';
+import PartnerSelect from './Selects/PartnerSelect.vue';
 
-// 自定义组件名
-export type BusinessComponents = 'GameSelect' | 'PartnerSelect'
+/**
+ * 组件类型
+ * @description 每次引入组件时，需要声明类型
+ */
+export type BusinessComponentType = 'GameSelect' | 'PartnerSelect'
 
-/** 组件注入 */
-export function CreateBusiness() {
+/** 生成业务组件 */
+export function createBusinessComp() {
   addComponent('GameSelect', GameSelect);
   addComponent('PartnerSelect', PartnerSelect);
 }
