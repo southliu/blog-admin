@@ -13,6 +13,14 @@ const baseURL = process.env.NODE_ENV !== 'development' ? prefixUrl : '/api';
 // 请求配置
 export const request = creteRequest(baseURL);
 
+interface ErrorResult {
+  response: {
+    data: {
+      message: string
+    }
+  }
+}
+
 /**
  * 创建请求
  * @param url - 链接地址
@@ -73,7 +81,7 @@ function creteRequest(url: string) {
           return err;
         }
 
-        handleError('服务器错误！');
+        handleError((err as ErrorResult).response?.data?.message);
         return err;
       }
     }

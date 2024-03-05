@@ -163,14 +163,6 @@ const getCaptcha = async () => {
     });
   }
 
-  captchaNum.value = 60;
-  timer.value = setInterval(() => {
-    captchaNum.value = captchaNum.value - 1;
-    if (captchaNum.value === 0) {
-      handleClearInterval();
-    }
-  }, 1000);
-
   try {
     const params = { email: formState.value?.email };
     const { code } = await getRegisterCode(params);
@@ -179,6 +171,14 @@ const getCaptcha = async () => {
         content: '获取验证码成功',
         key: 'getRegisterCode'
       });
+
+      captchaNum.value = 60;
+      timer.value = setInterval(() => {
+        captchaNum.value = captchaNum.value - 1;
+        if (captchaNum.value === 0) {
+          handleClearInterval();
+        }
+      }, 1000);
     }
   } catch(err) {
     console.error('获取验证码失败:', err);
