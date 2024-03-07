@@ -5,6 +5,16 @@ import type {
   Cancel,
 } from 'axios';
 
+export interface ErrorResult {
+  response: {
+    data: {
+      message: string;
+      status: string;
+      code: number;
+    }
+  }
+}
+
 export interface RequestCancel extends Cancel {
   data: object;
   response: {

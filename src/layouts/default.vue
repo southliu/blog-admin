@@ -10,7 +10,7 @@
     <Header
       class="header-driver box-border"
       :class="{ 'none': isMaximize }"
-      :username="username"
+      :nickName="nickName"
       :isCollapsed="isCollapsed"
       @toggleCollapsed="toggleCollapsed"
       @onUpdatePassword="onUpdatePassword"
@@ -99,7 +99,6 @@ import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import { useDebounceFn } from '@vueuse/core';
 import { getPermissions } from '@/servers/permission';
-import { permissionsToArray } from '@/utils/permissions';
 import { message, Skeleton } from 'ant-design-vue';
 import { useRoute } from 'vue-router';
 import { updatePassword } from '@/servers/login';
@@ -122,7 +121,7 @@ const { isPhone } = storeToRefs(menuStore);
 const { addCacheRoutes } = tabStore;
 const { setMenus } = menuStore;
 
-const username = ref(userInfo.value?.username || ''); // 用户名
+const nickName = ref(userInfo.value?.nickName || ''); // 用户名
 const isLoading = ref(false);
 const isCollapsed = ref(false); // 是否收起菜单
 const isMaximize = ref(false); // 是否窗口最大化
@@ -152,13 +151,12 @@ const getUserInfo = async () => {
   try {
     const { code, data } = await getPermissions({ refresh_cache: false });
     if (Number(code) !== 200) return;
-    const { user, permissions } = data;
-    const newPermissions = permissionsToArray(permissions);
-    username.value = user.username;
+    const { userInfo, permissions } = data;
+    nickName.value = userInfo.nickName;
 
-    setUserInfo(user);
-    setPermissions(newPermissions);
-    getUserMenu(newPermissions);
+    setUserInfo(userInfo);
+    setPermissions(permissions);
+    getUserMenu(permissions);
   } catch(err) {
     console.error(err);
   }

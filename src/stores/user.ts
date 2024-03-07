@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 
 interface UserDataInfo {
   id: number;
-  username: string;
+  nickName: string;
   email: string;
   phone: string;
 }
@@ -20,7 +20,7 @@ export const useUserStore = defineStore({
     // 用户信息
     userInfo: {
       id: 0,
-      username: '',
+      nickName: '',
       email: '',
       phone: ''
     }
@@ -58,7 +58,7 @@ export const useUserStore = defineStore({
     clearInfo() {
       this.userInfo = {
         id: 0,
-        username: '',
+        nickName: '',
         email: '',
         phone: ''
       };

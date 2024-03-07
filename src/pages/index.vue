@@ -15,7 +15,6 @@ import { Spin } from 'ant-design-vue';
 import { useTabStore } from '@/stores/tabs';
 import { useMenuStore } from '@/stores/menu';
 import { getPermissions } from '@/servers/permission';
-import { permissionsToArray } from '@/utils/permissions';
 import { getSystemMenuTree } from '@/servers/system/menu';
 
 const { getToken } = useToken();
@@ -47,12 +46,11 @@ const getUserInfo = async () => {
   try {
     const { code, data } = await getPermissions({ refresh_cache: false });
     if (Number(code) !== 200) return;
-    const { user, permissions } = data;
-    const newPermissions = permissionsToArray(permissions);
+    const { userInfo, permissions } = data;
 
-    setUserInfo(user);
-    setPermissions(newPermissions);
-    return newPermissions;
+    setUserInfo(userInfo);
+    setPermissions(permissions);
+    return permissions;
   } catch(err) {
     console.error(err);
   }

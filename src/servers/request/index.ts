@@ -1,3 +1,4 @@
+import type { ErrorResult } from './types';
 import { message } from 'ant-design-vue';
 import { getLocalInfo, removeLocalInfo } from '@/utils/local';
 import { TOKEN } from '@/utils/config';
@@ -12,14 +13,6 @@ const baseURL = process.env.NODE_ENV !== 'development' ? prefixUrl : '/api';
 
 // 请求配置
 export const request = creteRequest(baseURL);
-
-interface ErrorResult {
-  response: {
-    data: {
-      message: string
-    }
-  }
-}
 
 /**
  * 创建请求
@@ -81,7 +74,7 @@ function creteRequest(url: string) {
           return err;
         }
 
-        handleError((err as ErrorResult).response?.data?.message);
+        handleError((err as ErrorResult).response?.data?.message || '服务器错误！');
         return err;
       }
     }

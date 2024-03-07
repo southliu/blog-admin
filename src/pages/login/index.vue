@@ -94,7 +94,6 @@ import { useMenuStore } from '@/stores/menu';
 import { useUserStore } from '@/stores/user';
 import { PASSWORD_RULE } from '@/utils/verify';
 import { useWatermark } from '@/hooks/useWatermark';
-import { permissionsToArray } from '@/utils/permissions';
 import { handleFilterApiMenu, getFirstMenu } from '@/utils/menu';
 import { getSystemMenuTree } from '@/servers/system/menu';
 import {
@@ -178,17 +177,16 @@ const handleFinish: FormProps['onFinish'] = async (values: LoginData) => {
     isLoading.value = true;
     const { code, data } = await login(values);
     if (Number(code) !== 200) return;
-    const { token, user, permissions } = data;
+    const { token, userInfo, permissions } = data;
 
     if (!permissions?.length || !token) {
       return message.error({ content: '用户暂无权限登录', key: 'permissions' });
     }
 
-    const newPermissions = permissionsToArray(permissions);
     setToken(token);
-    setUserInfo(user);
-    setPermissions(newPermissions);
-    handleGoFirstMenu(newPermissions);
+    setUserInfo(userInfo);
+    setPermissions(permissions);
+    handleGoFirstMenu(permissions);
   } finally {
     isLoading.value = false;
   }

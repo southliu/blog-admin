@@ -30,7 +30,7 @@
             :height="27"
             alt="头像"
           >
-          <span class="ml-2 text-15px min-w-50px truncate">{{ username || 'south-admin' }}</span>
+          <span class="ml-2 text-15px min-w-50px truncate">{{ nickName || 'south-admin' }}</span>
         </div>
         <template #overlay>
           <Menu @click="onClickDropdown">
@@ -93,7 +93,7 @@ const emit = defineEmits<DefineEmits>();
 
 interface DefineProps {
   isCollapsed: boolean;
-  username: string;
+  nickName: string;
 }
 
 withDefaults(defineProps<DefineProps>(), {});

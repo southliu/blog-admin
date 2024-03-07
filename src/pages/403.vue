@@ -21,7 +21,6 @@ import { useUserStore } from '@/stores/user';
 import { storeToRefs } from 'pinia';
 import { useMenuStore } from '@/stores/menu';
 import { handleFilterApiMenu, getFirstMenu, getMenuByKey } from '@/utils/menu';
-import { permissionsToArray } from '@/utils/permissions';
 import { getPermissions } from '@/servers/permission';
 import { getSystemMenuTree } from '@/servers/system/menu';
 import { useToken } from '@/hooks/useToken';
@@ -49,13 +48,12 @@ const getUserInfo = async () => {
   try {
     const { code, data } = await getPermissions({ refresh_cache: false });
     if (Number(code) !== 200) return;
-    const { user, permissions } = data;
-    const newPermissions = permissionsToArray(permissions);
+    const { userInfo, permissions } = data;
 
-    setUserInfo(user);
-    setPermissions(newPermissions);
-    getUserMenu(newPermissions);
-    return newPermissions;
+    setUserInfo(userInfo);
+    setPermissions(permissions);
+    getUserMenu(permissions);
+    return permissions;
   } catch(err) {
     console.error(err);
   }
