@@ -5,7 +5,7 @@ import { OPEN_CLOSE } from "@/utils/constants";
 import { PHONE_RULE } from "@/utils/verify";
 
 // 权限前缀
-const permissionPrefix = '/authority/user';
+const permissionPrefix = '/user';
 
 // 权限
 export const pagePermission = {

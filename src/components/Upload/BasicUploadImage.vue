@@ -77,7 +77,7 @@ const isLoading = ref<boolean>(false);
 const imageUrl = ref<string>('');
 
 const headers = {
-  authorization: (getLocalInfo(TOKEN) || '') as string,
+  authorization: `Bearer ${(getLocalInfo(TOKEN) || '')}`,
 };
 
 onMounted(() => {

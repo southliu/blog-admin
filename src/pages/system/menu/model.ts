@@ -6,22 +6,19 @@ import { MENU_TYPE } from "@/utils/constants";
 
 export interface SystemMenuTree {
   children?: SystemMenuTree[];
-  enable?: boolean;
   id: string;
-  menuType: number;
+  type: number;
   link?: boolean;
-  menuName: string;
-  menuNameEn: string;
-  menuNo?: string;
-  menuRoute: string;
+  name: string;
+  route: string;
   parentId?: string;
-  permissions: string;
+  permission: string;
   sortNum?: number;
-  visible?: boolean;
+  enable?: boolean;
 }
 
 // 权限前缀
-const permissionPrefix = '/authority/menu';
+const permissionPrefix = '/menu';
 
 // 权限
 export const pagePermission = {
@@ -48,30 +45,30 @@ export const tableColumns: TableColumnsProps[] = [
     width: 150
   },
   {
-    title: '中文名称',
-    dataIndex: 'menuName',
+    title: '名称',
+    dataIndex: 'name',
     width: 100
   },
   {
     title: '接口权限',
-    dataIndex: 'permissions',
+    dataIndex: 'permission',
     width: 180
   },
   {
     title: '菜单路由',
-    dataIndex: 'menuRoute',
+    dataIndex: 'route',
     width: 180
   },
   {
     title: '菜单类型',
-    dataIndex: 'menuType',
+    dataIndex: 'type',
     echoArr: MENU_TYPE,
     width: 100
   },
   {
-    title: '客户端',
-    dataIndex: 'clientName',
-    width: 100
+    title: '图标',
+    dataIndex: 'icon',
+    width: 180
   },
   {
     title: '排序',
@@ -88,19 +85,10 @@ export const tableColumns: TableColumnsProps[] = [
 ];
 
 // 新增数据
-export const createList = (parentList: DefaultOptionType[], menuType = 0): FormList[] => [
+export const createList = (parentList: DefaultOptionType[], type = 0): FormList[] => [
   {
-    label: '中文名称',
-    name: 'menuName',
-    rules: FORM_REQUIRED,
-    component: 'Input',
-    componentProps: {
-      maxlength: 60,
-    }
-  },
-  {
-    label: '菜单编码',
-    name: 'menuNo',
+    label: '名称',
+    name: 'name',
     rules: FORM_REQUIRED,
     component: 'Input',
     componentProps: {
@@ -109,7 +97,7 @@ export const createList = (parentList: DefaultOptionType[], menuType = 0): FormL
   },
   {
     label: '接口权限',
-    name: 'permissions',
+    name: 'permission',
     rules: FORM_REQUIRED,
     component: 'Input',
     componentProps: {
@@ -118,7 +106,7 @@ export const createList = (parentList: DefaultOptionType[], menuType = 0): FormL
   },
   {
     label: '菜单类型',
-    name: 'menuType',
+    name: 'type',
     rules: FORM_REQUIRED,
     component: 'Select',
     componentProps: {
@@ -127,18 +115,18 @@ export const createList = (parentList: DefaultOptionType[], menuType = 0): FormL
   },
   {
     label: '菜单路由',
-    name: 'menuRoute',
+    name: 'route',
     rules: FORM_REQUIRED,
-    hidden: menuType !== 1,
+    hidden: type !== 1,
     component: 'Input'
   },
   {
     label: '排序',
     name: 'sortNum',
     rules: FORM_REQUIRED,
-    component: 'Input',
+    component: 'InputNumber',
     componentProps: {
-      maxlength: 20,
+      max: 99,
     }
   },
   {

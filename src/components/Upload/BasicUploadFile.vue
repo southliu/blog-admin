@@ -79,7 +79,7 @@ const fileInfo = ref({
   name: ''
 });
 const headers = {
-  authorization: (getLocalInfo(TOKEN) || '') as string,
+  authorization: `Bearer ${(getLocalInfo(TOKEN) || '')}`,
 };
 
 onMounted(() => {

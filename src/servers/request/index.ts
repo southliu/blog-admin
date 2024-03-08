@@ -27,7 +27,7 @@ function creteRequest(url: string) {
       requestInterceptors(res) {
         const token = getLocalInfo(TOKEN) || '';
         if (res?.headers && token) {
-          res.headers.Authorization = `${token}`;
+          res.headers.Authorization = `Bearer ${token}`;
         }
         return res;
       },

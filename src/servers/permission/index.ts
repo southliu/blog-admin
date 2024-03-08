@@ -7,7 +7,7 @@ import { request } from '@/servers/request';
  */
 export function getPermissions(data: unknown) {
   return request.get<LoginResult>(
-    '/authority/user/refresh-permissions',
+    '/user/refresh-permissions',
     { params: data }
   );
 }

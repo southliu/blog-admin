@@ -4,7 +4,7 @@ import type { Key } from 'ant-design-vue/lib/vc-tree/interface';
 import { request } from '@/servers/request';
 
 enum API {
-  URL = '/authority/user',
+  URL = '/user',
 }
 
 /**
