@@ -44,7 +44,7 @@ const isLoading = ref(false);
 /** 获取用户信息和权限 */
 const getUserInfo = async () => {
   try {
-    const { code, data } = await getPermissions({ refresh_cache: false });
+    const { code, data } = await getPermissions();
     if (Number(code) !== 200) return;
     const { userInfo, permissions } = data;
 

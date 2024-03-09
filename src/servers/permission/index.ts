@@ -5,9 +5,9 @@ import { request } from '@/servers/request';
  * 权限
  * @param data - 请求数据
  */
-export function getPermissions(data: unknown) {
+export function getPermissions(data?: unknown) {
   return request.get<LoginResult>(
-    '/user/refresh-permissions',
+    '/refresh',
     { params: data }
   );
 }
