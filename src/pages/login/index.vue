@@ -89,6 +89,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { login } from '@/servers/login';
 import { useRouter } from 'vue-router';
 import { setTitle } from '@/utils/helper';
+import { encryptMd5 } from '@/utils/crypto';
 import { useToken } from '@/hooks/useToken';
 import { useMenuStore } from '@/stores/menu';
 import { useUserStore } from '@/stores/user';
@@ -175,7 +176,9 @@ const handleGoFirstMenu = async (permissions: string[]) => {
 const handleFinish: FormProps['onFinish'] = async (values: LoginData) => {
   try {
     isLoading.value = true;
-    const { code, data } = await login(values);
+    const params = {...values};
+    params.password = encryptMd5(params.password);
+    const { code, data } = await login(params);
     if (Number(code) !== 200) return;
     const { token, userInfo, permissions } = data;
 

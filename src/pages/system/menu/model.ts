@@ -18,7 +18,7 @@ export interface SystemMenuTree {
 }
 
 // 权限前缀
-const permissionPrefix = '/menu';
+const permissionPrefix = '/system/menu';
 
 // 权限
 export const pagePermission = {
