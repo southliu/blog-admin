@@ -54,7 +54,7 @@
   >
     <BasicForm
       ref="createFormRef"
-      :list="createList(handleFilterParent(tableData), creates.data?.menuType as number)"
+      :list="createList(handleFilterParent(tableData), creates.data?.type as number)"
       :labelCol="{ span: 6 }"
       :data="creates.data"
       @handleFinish="handleCreate"

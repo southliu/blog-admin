@@ -116,7 +116,7 @@ export function searchMenuValue(data: SearchMenuProps): SideMenu[] {
       }
     }
     if (
-      menus[i]?.menuType === 1 &&
+      menus[i]?.type === 1 &&
       menus[i]?.label?.includes(value) &&
       hasPermission(menus[i], permissions)
     ) {
@@ -127,8 +127,8 @@ export function searchMenuValue(data: SearchMenuProps): SideMenu[] {
       const nav = matchPath(menus[i].key, currentPath);
 
       // 匹配到value值时添加到result中
-      const { label, key, id, menuType } = menus[i];
-      result.push({ label, key, id, menuType, nav });
+      const { label, key, id, type } = menus[i];
+      result.push({ label, key, id, type, nav });
     }
   }
 
@@ -220,8 +220,8 @@ const getMenuPath = (menus: SystemMenuTree[]) => {
     for (let i = 0; i < menus?.length; i++) {
       const item = menus[i];
       
-      if (item.menuRoute) {
-        result = item.menuRoute;
+      if (item.route) {
+        result = item.route;
         return result;
       }
 
@@ -255,19 +255,19 @@ export const handleFilterApiMenu = (
   for (let i = 0; i < list?.length; i++) {
     const item = list[i];
     let children: SideMenu[] = [];
-    const { menuName, permissions, id, menuType } = item;
-    let { menuRoute } = item;
+    const { name, permission, id, type } = item;
+    let { route } = item;
 
     // 无权限则跳过
-    if (!permissionList.includes(permissions)) continue;
+    if (!permissionList.includes(permission)) continue;
 
     // 路由为空则转为404
-    if (!menuRoute && !item.children?.length) {
-      menuRoute = '/404';
+    if (!route && !item.children?.length) {
+      route = '/404';
     }
 
     // 如果路由不存在
-    if (!menuRoute && item.children?.length) {
+    if (!route && item.children?.length) {
       const firstRoute = getMenuPath(item.children);
       const arr = firstRoute?.split('/');
       let newRouter = '';
@@ -277,7 +277,7 @@ export const handleFilterApiMenu = (
         newRouter += `/${item}`;
       }
 
-      menuRoute = newRouter || '/404';
+      route = newRouter || '/404';
     }
 
     if (item.children?.length) {
@@ -287,10 +287,10 @@ export const handleFilterApiMenu = (
 
     const params: SideMenu = {
       id,
-      menuType,
-      key: menuRoute || permissions,
-      label: menuName,
-      rule: permissions,
+      type,
+      key: route || permission,
+      label: name,
+      rule: permission,
       children
     };
     result.push(params);
@@ -333,7 +333,7 @@ export function getFirstMenu(
       hasPermission(menus[i], permissions) &&
       !hasChildren(menus[i]) &&
       !result
-      ) result = menus[i].key;
+    ) result = menus[i].key;
   }
 
   return result;

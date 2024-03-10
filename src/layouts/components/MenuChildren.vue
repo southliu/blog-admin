@@ -3,7 +3,7 @@
     v-for="item in list"
     :key="item.key"
   >
-    <template v-if="item.children?.length && item.menuType !== 1">
+    <template v-if="item.children?.length && item.type !== 1">
       <SubMenu
         :data-title="item.label"
         :key="item.key"

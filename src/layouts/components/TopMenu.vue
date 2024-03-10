@@ -5,7 +5,7 @@
       :key="item.id"
     >
       <div
-        v-if="item.menuType === 0"
+        v-if="item.type === 0"
         class="h-40px leading-40px flex flex-col items-center cursor-pointer relative mr-30px"
         :class="{ 'text-#1d4ed8': topMenuKey === item.key }"
         @click="handleClick(item.key, item.children)"
@@ -67,7 +67,7 @@ const handleInit = () => {
   if (!topMenuKey.value && menuList.value?.length) {
     for (let i = 0; i < menuList.value.length; i++) {
       const item = menuList.value[i];
-      if (item.menuType === 0 && route.path.includes(item.key)) {
+      if (item.type === 0 && route.path.includes(item.key)) {
         setTopMenuKey(item.key);
         setSideMenu(item.children || []);
         return;
@@ -103,7 +103,7 @@ const getFirstMenu = (list: SideMenu[]) => {
 
     for (let i = 0; i < list?.length; i++) {
       const item = list[i];
-      if (item.children?.length && item.menuType !== 1) {
+      if (item.children?.length && item.type !== 1) {
         const childResult = deepData(item.children);
         if (childResult) {
           result = childResult;
