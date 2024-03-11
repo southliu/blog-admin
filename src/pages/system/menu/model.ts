@@ -32,7 +32,7 @@ export const pagePermission = {
 export const searchList: FormList[] = [
   {
     label: '菜单名称',
-    name: 'menuName',
+    name: 'name',
     component: 'Input'
   }
 ];
@@ -136,7 +136,7 @@ export const createList = (parentList: DefaultOptionType[], type = 0): FormList[
     componentProps: {
       treeData: parentList,
       fieldNames: {
-        label: 'menuName',
+        label: 'name',
         value: 'id'
       }
     }

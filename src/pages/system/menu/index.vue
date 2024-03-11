@@ -149,7 +149,7 @@ const createSubmit = () => {
 const handleFilterParent = (list: TableData[]): TableData[] => {
   const result: TableData[] = [
     {
-      menuName: '顶级菜单',
+      name: '顶级菜单',
       id: '0',
       children: list
     }
@@ -183,10 +183,10 @@ const onCreate = (id?: string) => {
  * @param record - 当前行数据
  */
 const onUpdate = async (record: FormData) => {
-  const { id, menuName } = record;
+  const { id, name } = record;
   creates.isOpen = !creates.isOpen;
   creates.id = id as string;
-  creates.title = EDIT_TITLE(menuName as string);
+  creates.title = EDIT_TITLE(name as string);
   creates.type = 'update';
 
   try {

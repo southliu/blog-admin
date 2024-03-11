@@ -15,7 +15,7 @@ import { Spin } from 'ant-design-vue';
 import { useTabStore } from '@/stores/tabs';
 import { useMenuStore } from '@/stores/menu';
 import { getPermissions } from '@/servers/permission';
-import { getSystemMenuTree } from '@/servers/system/menu';
+import { getSystemUserMenu } from '@/servers/system/menu';
 
 const { getToken } = useToken();
 const tabStore = useTabStore();
@@ -60,7 +60,7 @@ const getUserInfo = async () => {
 const getUserMenu = async (permissions: string[]) => {
   try {
     isLoading.value = true;
-    const { code, data } = await getSystemMenuTree({ isFirst: true });
+    const { code, data } = await getSystemUserMenu({ isFirst: true });
     if (Number(code) !== 200) return;
     const menuData = handleFilterApiMenu(data, permissions);
     setMenus(menuData);

@@ -19,6 +19,17 @@ export function getSystemMenuTree(data?: unknown) {
 }
 
 /**
+ * 获取用户树形数据
+ * @param data - 请求数据
+ */
+export function getSystemUserMenu(data?: unknown) {
+  return request.get<SystemMenuTree[]>(
+    `${API.URL}/userMenu`,
+    { params: data }
+  );
+}
+
+/**
  * 根据ID获取数据
  * @param id - 唯一标识
  */

@@ -96,7 +96,7 @@ import { useUserStore } from '@/stores/user';
 import { PASSWORD_RULE } from '@/utils/verify';
 import { useWatermark } from '@/hooks/useWatermark';
 import { handleFilterApiMenu, getFirstMenu } from '@/utils/menu';
-import { getSystemMenuTree } from '@/servers/system/menu';
+import { getSystemUserMenu } from '@/servers/system/menu';
 import {
   message,
   Form,
@@ -140,7 +140,7 @@ const onRegister = () => {
 const getUserMenu = async (permissions: string[]) => {
   try {
     isLoading.value = true;
-    const { code, data } = await getSystemMenuTree({ isLayout: true });
+    const { code, data } = await getSystemUserMenu({ isLayout: true });
     if (Number(code) !== 200) return;
     const menuData = handleFilterApiMenu(data, permissions);
     setMenus(menuData);

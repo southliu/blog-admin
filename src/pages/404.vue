@@ -22,7 +22,7 @@ import { storeToRefs } from 'pinia';
 import { useMenuStore } from '@/stores/menu';
 import { handleFilterApiMenu, getFirstMenu, getMenuByKey } from '@/utils/menu';
 import { getPermissions } from '@/servers/permission';
-import { getSystemMenuTree } from '@/servers/system/menu';
+import { getSystemUserMenu } from '@/servers/system/menu';
 import { useToken } from '@/hooks/useToken';
 
 const router = useRouter();
@@ -63,7 +63,7 @@ const getUserInfo = async () => {
 const getUserMenu = async (permissions: string[]) => {
   try {
     isLoading.value = true;
-    const { code, data } = await getSystemMenuTree({ isLayout: true });
+    const { code, data } = await getSystemUserMenu({ isLayout: true });
     if (Number(code) !== 200) return;
     const menuData = handleFilterApiMenu(data, permissions);
     setMenus(menuData);
