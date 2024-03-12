@@ -34,7 +34,7 @@ export function getSystemUserMenu(data?: unknown) {
  * @param id - 唯一标识
  */
 export function getSystemMenuById(id: string) {
-  return request.get(`${API.URL}/detail?id=${id}`);
+  return request.get(`${API.URL}/${id}`);
 }
 
 /**
@@ -51,7 +51,7 @@ export function createSystemMenu(data: unknown) {
  * @param data - 请求数据
  */
 export function updateSystemMenu(id: string, data: unknown) {
-  return request.put(`${API.URL}/${id}`, data);
+  return request.patch(`${API.URL}/${id}`, data);
 }
 
 /**
@@ -78,5 +78,5 @@ export function updateSystemMenu(id: string, data: unknown) {
  * @param data - 权限数据
  */
 export function savePermission(data: unknown) {
-  return request.put(`${API.URL}/authorize/save`, data);
+  return request.patch(`${API.URL}/authorize/save`, data);
 }

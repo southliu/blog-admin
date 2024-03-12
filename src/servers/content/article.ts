@@ -38,7 +38,7 @@ export function createArticle(data: unknown) {
  * @param data - 请求数据
  */
 export function updateArticle(id: string, data: unknown) {
-  return request.put(`${API.URL}/${id}`, data);
+  return request.patch(`${API.URL}/${id}`, data);
 }
 
 /**
