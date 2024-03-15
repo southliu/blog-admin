@@ -96,7 +96,7 @@ import { useUserStore } from '@/stores/user';
 import { PASSWORD_RULE } from '@/utils/verify';
 import { useWatermark } from '@/hooks/useWatermark';
 import { handleFilterApiMenu, getFirstMenu } from '@/utils/menu';
-import { getSystemUserMenu } from '@/servers/system/menu';
+import { getSystemUserMenu } from '@/servers/systems/menu';
 import {
   message,
   Form,

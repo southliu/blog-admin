@@ -22,7 +22,7 @@ import { storeToRefs } from 'pinia';
 import { useMenuStore } from '@/stores/menu';
 import { handleFilterApiMenu, getFirstMenu, getMenuByKey } from '@/utils/menu';
 import { getPermissions } from '@/servers/permission';
-import { getSystemUserMenu } from '@/servers/system/menu';
+import { getSystemUserMenu } from '@/servers/systems/menu';
 import { useToken } from '@/hooks/useToken';
 
 const router = useRouter();

@@ -88,6 +88,11 @@ function creteRequest(url: string) {
  */
 const handleError = (error: string, content?: string) => {
   console.error('错误信息:', error);
+
+  if (error && typeof error === 'object' && error !== null) {
+    error = '服务器错误';
+  }
+
   message.error({
     content: content || error || '服务器错误',
     key: 'error'

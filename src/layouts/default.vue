@@ -102,7 +102,7 @@ import { getPermissions } from '@/servers/permission';
 import { message, Skeleton } from 'ant-design-vue';
 import { useRoute } from 'vue-router';
 import { updatePassword } from '@/servers/login';
-import { getSystemUserMenu } from '@/servers/system/menu';
+import { getSystemUserMenu } from '@/servers/systems/menu';
 import { handleFilterApiMenu } from '@/utils/menu';
 import { routeToKeepalive } from '@/router/utils/helper';
 import Header from './components/Header.vue';

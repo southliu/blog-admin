@@ -20,8 +20,26 @@
       :data="tableData"
       :columns="tableColumns"
       :isLoading="isLoading"
+      :pagination="{
+        current: pagination.page,
+        pageSize: pagination.pageSize,
+        total: pagination.total,
+        onChange: handlePagination,
+      }"
     >
-      <template v-slot:operate='{ record }'>
+      <template #status="{ record }">
+        {{ record.status ? '开启' : '关闭' }}
+      </template>
+
+      <template #operate="{ record }">
+        <BasicBtn
+          v-if="checkPermission(pagePermission.permission)"
+          class="btn-space"
+          :isLoading="isLoading"
+          @click="openPermission(record.id)"
+        >
+          权限
+        </BasicBtn>
         <UpdateBtn
           v-if="checkPermission(pagePermission.update)"
           class="btn-space"
@@ -30,17 +48,9 @@
         />
         <DeleteBtn
           v-if="checkPermission(pagePermission.delete)"
-          class="btn-space"
           :isLoading="isLoading"
           @click="handleDelete(record.id)"
         />
-        <BasicBtn
-          v-if="checkPermission(pagePermission.create)"
-          :isLoading="isLoading"
-          @click="onCreate(record.id)"
-        >
-          添加下级菜单
-        </BasicBtn>
       </template>
     </BasicTable>
   </BasicContent>
@@ -54,23 +64,34 @@
   >
     <BasicForm
       ref="createFormRef"
-      :list="createList(handleFilterParent(tableData), creates.data?.type as number)"
+      :list="createList"
       :labelCol="{ span: 6 }"
       :data="creates.data"
       @handleFinish="handleCreate"
     />
   </BasicModal>
+
+  <PermissionDrawer
+    :isOpen="permissionConfig.isOpen"
+    :treeData="permissionConfig.treeData"
+    :checkedKeys="permissionConfig.checkedKeys"
+    @onClose="closePermission"
+    @onSubmit="permissionSubmit"
+  />
 </template>
 
 <script lang="ts" setup>
 import type { FormData } from '#/form';
 import type { BasicFormProps } from '@/components/Form/model';
-import type { CreateData, TableData } from '#/public';
+import type { CreateData, TableData, PaginationData } from '#/public';
+import type { DataNode } from 'ant-design-vue/lib/tree';
+import type { Key } from 'ant-design-vue/lib/vc-tree/interface';
 import { message } from 'ant-design-vue';
 import { onActivated, reactive, shallowRef, ref } from 'vue';
+import { checkPermission } from '@/utils/permissions';
+import { ADD_TITLE, EDIT_TITLE, PAGE_SIZE } from '@/utils/config';
 import { UpdateBtn, DeleteBtn, BasicBtn, CreateBtn } from '@/components/Buttons';
-import { ADD_TITLE, EDIT_TITLE } from '@/utils/config';
-import { checkPermission } from "@/utils/permissions";
+import { getPermission, savePermission } from '@/servers/systems/menu';
 import {
   searchList,
   createList,
@@ -78,31 +99,47 @@ import {
   pagePermission
 } from './model';
 import {
-  getSystemMenuTree,
-  getSystemMenuById,
-  createSystemMenu,
-  updateSystemMenu,
-  deleteSystemMenu
-} from '@/servers/system/menu';
+  getSystemUserPage,
+  getSystemUserById,
+  createSystemUser,
+  updateSystemUser,
+  deleteSystemUser,
+} from '@/servers/systems/user';
 import BtnRow from '@/components/BtnRow/index.vue';
 import BasicContent from '@/components/Content/BasicContent.vue';
 import BasicTable from '@/components/Table/BasicTable.vue';
 import BasicSearch from '@/components/Search/BasicSearch.vue';
 import BasicForm from '@/components/Form/BasicForm.vue';
 import BasicModal from '@/components/Modal/BasicModal.vue';
+import PermissionDrawer from './components/PermissionDrawer.vue';
+
+interface PermissionConfig {
+  id: string;
+  isOpen: boolean;
+  checkedKeys: Key[];
+  treeData: DataNode[];
+}
 
 defineOptions({
-  name: 'SystemMenu'
+  name: 'SystemsUser'
 });
 
 const isLoading = ref(false);
 const isCreateLoading = ref(false);
 const createFormRef = shallowRef<BasicFormProps>();
 
+// 权限配置
+const permissionConfig = reactive<PermissionConfig>({
+  id: '',
+  isOpen: false,
+  checkedKeys: [],
+  treeData: []
+});
+
 // 初始化新增数据
 const initCreate = {
-  sortNum: 1,
-  parentId: '0'
+  status: 1,
+  user: { name: { test: '1234' } }
 };
 
 // 搜索数据
@@ -113,12 +150,18 @@ const creates = reactive<CreateData>({
   id: '',
   isOpen: false,
   title: ADD_TITLE,
-  data: {...initCreate},
-  type: 'create'
+  data: initCreate
 });
 
 // 表格数据
 const tableData = ref<TableData[]>([]);
+
+// 分页数据
+const pagination = reactive<PaginationData>({
+  total: 0,
+  page: 1,
+  pageSize: PAGE_SIZE,
+});
 
 onActivated(() => {
   getPage();
@@ -126,12 +169,16 @@ onActivated(() => {
 
 /** 获取表格数据 */
 const getPage = async () => {
-  const query = { ...searchData.value };
+  const newPagination = { ...pagination };
+  delete newPagination.total;
+  const query = { ...newPagination, ...searchData.value };
   try {
     isLoading.value = true;
-    const { code, data } = await getSystemMenuTree(query);
+    const { code, data } = await getSystemUserPage(query);
     if (Number(code) !== 200) return;
-    tableData.value = JSON.parse(JSON.stringify(data));
+    const { items, total } = data;
+    tableData.value = items;
+    pagination.total = Number(total) || 0;
   } finally {
     isLoading.value = false;
   }
@@ -143,39 +190,21 @@ const createSubmit = () => {
 };
 
 /**
- * 父级菜单处理
- * @param list - 表格列表
- */
-const handleFilterParent = (list: TableData[]): TableData[] => {
-  const result: TableData[] = [
-    {
-      name: '顶级菜单',
-      id: '0',
-      children: list
-    }
-  ];
-
-  return result;
-};
-
-/**
  * 搜索提交
  * @param values - 表单返回数据
  */
 const handleSearch = (values: FormData) => {
   searchData.value = values;
+  pagination.page = 1;
   getPage();
 };
 
 /** 点击新增 */
-const onCreate = (id?: string) => {
+const onCreate = () => {
   creates.isOpen = !creates.isOpen;
   creates.title = ADD_TITLE;
-  creates.id = id || '';
-  creates.type = 'create';
-  const params = {...initCreate};
-  params.parentId = id || params.parentId || '';
-  creates.data = params;
+  creates.id = '';
+  creates.data = initCreate;
 };
 
 /**
@@ -187,13 +216,12 @@ const onUpdate = async (record: FormData) => {
   creates.isOpen = !creates.isOpen;
   creates.id = id as string;
   creates.title = EDIT_TITLE(name as string);
-  creates.type = 'update';
 
   try {
     isCreateLoading.value = true;
-    const { code, data } = await getSystemMenuById(id as string);
+    const { code, data } = await getSystemUserById(id as string);
     if (Number(code) !== 200) return;
-    creates.data = (data || {}) as FormData;
+    creates.data = data;
   } finally {
     isCreateLoading.value = false;
   }
@@ -203,18 +231,18 @@ const onUpdate = async (record: FormData) => {
  * 新增/编辑提交
  * @param values - 表单返回数据
  */
-const handleCreate = async () => {
+const handleCreate = async (values: FormData) => {
   try {
     isCreateLoading.value = true;
-    const functions = creates.type === 'update' ? updateSystemMenu(creates.id, creates.data) : createSystemMenu(creates.data);
-    const { code } = await functions;
+    const functions = () => creates.id ? updateSystemUser(creates.id, values) : createSystemUser(values);
+    const { code, message: resultMessage } = await functions();
     if (Number(code) !== 200) return;
     getPage();
     creates.id = '';
     creates.isOpen = false;
-    creates.data = {...initCreate};
+    creates.data = initCreate;
     createFormRef.value?.handleReset();
-    message.success('操作成功');
+    message.success(resultMessage || '操作成功');
   } finally {
     isCreateLoading.value = false;
   }
@@ -232,11 +260,62 @@ const onCloseCreate = () => {
 const handleDelete = async (id: string | number) => {
   try {
     isLoading.value = true;
-    const { code } = await deleteSystemMenu(id as string);
-    if (Number(code) === 200) {
-      message.success('删除成功');
+    const data = await deleteSystemUser(id as string);
+    if (data?.code === 200) {
+      message.success(data?.message || '删除成功');
       getPage();
     }
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+/**
+ * 分页
+ * @param page - 当前页
+ * @param pageSize - 分页总数
+ */
+const handlePagination = (page: number, pageSize: number) => {
+  pagination.page = page;
+  pagination.pageSize = pageSize;
+  getPage();
+};
+
+/** 开启权限 */
+const openPermission = async (id: string) => {
+  try {
+    isLoading.value = true;
+    const params = { userId: id };
+    const { code, data } = await getPermission(params);
+    if (Number(code) !== 200) return;
+    const { defaultCheckedKeys, treeData } = data;
+    permissionConfig.id = id;
+    permissionConfig.treeData = treeData;
+    permissionConfig.checkedKeys = Object.values(defaultCheckedKeys);
+    permissionConfig.isOpen = true;
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+/** 关闭权限 */
+const closePermission = () => {
+  permissionConfig.isOpen = false;
+};
+
+/**
+ * 权限提交
+ */
+const permissionSubmit = async (checked: Key[]) => {
+  try {
+    isLoading.value = true;
+    const params = {
+      menuIds: checked,
+      userId: permissionConfig.id
+    };
+    const data = await savePermission(params);
+    message.success(data.message || '授权成功');
+    permissionConfig.isOpen = false;
   } finally {
     isLoading.value = false;
   }

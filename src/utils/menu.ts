@@ -1,5 +1,5 @@
 import type { SideMenu, TableData } from '#/public';
-import type { SystemMenuTree } from "@/pages/system/menu/model";
+import type { SystemMenuTree } from "@/pages/systems/menu/model";
 
 /**
  * 根据路由获取展开菜单数组

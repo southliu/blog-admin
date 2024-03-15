@@ -1,10 +1,10 @@
-import type { SystemMenuTree } from '@/pages/system/menu/model';
+import type { SystemMenuTree } from '@/pages/systems/menu/model';
 import type { DataNode } from 'ant-design-vue/lib/tree';
 import type { Key } from 'ant-design-vue/lib/vc-tree/interface';
 import { request } from '@/servers/request';
 
 enum API {
-  URL = '/menu',
+  URL = '/system/menu',
 }
 
 /**
@@ -13,9 +13,9 @@ enum API {
  */
 export function getSystemMenuTree(data?: unknown) {
   return request.get<SystemMenuTree[]>(
-  `${API.URL}/list`,
-  { params: data }
-);
+    `${API.URL}/list`,
+    { params: data }
+  );
 }
 
 /**
@@ -51,7 +51,7 @@ export function createSystemMenu(data: unknown) {
  * @param data - 请求数据
  */
 export function updateSystemMenu(id: string, data: unknown) {
-  return request.patch(`${API.URL}/${id}`, data);
+  return request.put(`${API.URL}/${id}`, data);
 }
 
 /**

@@ -107,7 +107,7 @@ git push
 ```ts
 /**
  * 需要通过路径转换成对应的name
- * /system/user => SystemUser
+ * /systems/user => SystemUser
  * /content/article => ContentArticle
  */
 defineOptions({

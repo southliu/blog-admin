@@ -3,6 +3,7 @@ import type { TableColumnsProps } from "#/public";
 import type { DefaultOptionType } from 'ant-design-vue/lib/select';
 import { FORM_REQUIRED } from "@/utils/config";
 import { MENU_TYPE } from "@/utils/constants";
+import IconInput from "./components/IconInput.vue";
 
 export interface SystemMenuTree {
   children?: SystemMenuTree[];
@@ -127,6 +128,15 @@ export const createList = (parentList: DefaultOptionType[], type = 0): FormList[
     component: 'InputNumber',
     componentProps: {
       max: 99,
+    }
+  },
+  {
+    label: '图标',
+    name: 'icon',
+    component: 'customize',
+    render: IconInput,
+    componentProps: {
+      maxlength: 60
     }
   },
   {

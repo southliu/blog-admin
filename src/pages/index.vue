@@ -15,7 +15,7 @@ import { Spin } from 'ant-design-vue';
 import { useTabStore } from '@/stores/tabs';
 import { useMenuStore } from '@/stores/menu';
 import { getPermissions } from '@/servers/permission';
-import { getSystemUserMenu } from '@/servers/system/menu';
+import { getSystemUserMenu } from '@/servers/systems/menu';
 
 const { getToken } = useToken();
 const tabStore = useTabStore();
