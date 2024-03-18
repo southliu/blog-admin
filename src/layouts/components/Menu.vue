@@ -7,19 +7,19 @@
     >
       <img
         class="object-contain"
-        :width="50"
+        :width="25"
         :height="30"
         :src="Logo"
         alt="LOGO"
       />
       <span
-        class="text-white ml-3 text-xl font-bold truncate"
+        class="text-white ml-10px text-xl font-bold truncate"
         :class="{ 'hidden': isCollapsed }"
       >
         博客后台系统
       </span>
     </div>
-    <div class="menu-height overflow-y-auto">
+    <div class="menu-height overflow-y-auto text-white">
       <Menu
         v-model:selectedKeys="selectedKeys"
         :openKeys="(!isCollapsed && !isPhone) ? currentOpenKeys : undefined"

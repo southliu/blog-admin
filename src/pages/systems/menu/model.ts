@@ -10,6 +10,7 @@ export interface SystemMenuTree {
   id: string;
   type: number;
   link?: boolean;
+  icon?: string;
   name: string;
   route: string;
   parentId?: string;

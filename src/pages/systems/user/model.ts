@@ -19,15 +19,29 @@ export const pagePermission = {
 // 搜索数据
 export const searchList: FormList[] = [
   {
-    label: '年龄',
-    name: 'age',
-    component: 'InputNumber'
+    label: '名字',
+    name: 'nickName',
+    component: 'Input',
+    componentProps: {
+      maxlength: 30
+    }
   },
   {
-    label: '名字',
-    name: 'keyword',
-    component: 'Input'
-  }
+    label: '手机号',
+    name: 'phone',
+    component: 'Input',
+    componentProps: {
+      max: 30
+    }
+  },
+  {
+    label: '邮箱',
+    name: 'email',
+    component: 'Input',
+    componentProps: {
+      maxlength: 30
+    }
+  },
 ];
 
 // 表格数据
@@ -42,7 +56,7 @@ export const tableColumns: TableColumnsProps[] = [
   },
   {
     title: '姓名',
-    dataIndex: 'real_name'
+    dataIndex: 'nickName'
   },
   {
     title: '角色',

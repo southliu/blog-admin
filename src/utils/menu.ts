@@ -255,7 +255,7 @@ export const handleFilterApiMenu = (
   for (let i = 0; i < list?.length; i++) {
     const item = list[i];
     let children: SideMenu[] = [];
-    const { name, permission, id, type } = item;
+    const { name, permission, icon, id, type } = item;
     let { route } = item;
 
     // 无权限则跳过
@@ -291,6 +291,7 @@ export const handleFilterApiMenu = (
       key: route || permission,
       label: name,
       rule: permission,
+      icon,
       children
     };
     result.push(params);
