@@ -4,10 +4,10 @@ import { FORM_REQUIRED } from "@/utils/config";
 import CustomizeInput from "./components/CustomizeInput.vue";
 
 // 父路径
-export const fatherPath = '/content/article';
+export const fatherPath = '/operations/article';
 
 // 权限前缀
-const permissionPrefix = '/content/article';
+const permissionPrefix = '/operations/article';
 
 // 权限
 export const pagePermission = {

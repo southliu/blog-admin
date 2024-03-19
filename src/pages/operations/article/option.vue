@@ -124,4 +124,4 @@ const handleFinish = async (values: FormData) => {
     isLoading.value = false;
   }
 };
-</script>
+</script>@/servers/operations/article

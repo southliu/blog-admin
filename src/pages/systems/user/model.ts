@@ -13,7 +13,6 @@ export const pagePermission = {
   create: `${permissionPrefix}/create`,
   update: `${permissionPrefix}/update`,
   delete: `${permissionPrefix}/delete`,
-  permission: `${permissionPrefix}/authority`
 };
 
 // 搜索数据
@@ -60,7 +59,7 @@ export const tableColumns: TableColumnsProps[] = [
   },
   {
     title: '角色',
-    dataIndex: 'roles_name'
+    dataIndex: 'roleName'
   },
   {
     title: '手机号',
@@ -85,15 +84,6 @@ export const tableColumns: TableColumnsProps[] = [
 // 新增数据
 export const createList: FormList[] = [
   {
-    label: '嵌套数据',
-    name: ['user', 'name', 'test'],
-    rules: FORM_REQUIRED,
-    component: 'Input',
-    componentProps: {
-      maxlength: 32
-    }
-  },
-  {
     label: '用户名',
     name: 'username',
     rules: FORM_REQUIRED,
@@ -104,7 +94,7 @@ export const createList: FormList[] = [
   },
   {
     label: '姓名',
-    name: 'real_name',
+    name: 'nickName',
     rules: FORM_REQUIRED,
     component: 'Input',
     componentProps: {
@@ -113,18 +103,16 @@ export const createList: FormList[] = [
   },
   {
     label: '角色',
-    name: 'roles_name',
+    name: 'roleName',
     rules: FORM_REQUIRED,
-    component: 'Input',
+    component: 'RoleSelect',
     componentProps: {
-      maxlength: 32
     }
   },
   {
     label: '电话',
     name: 'phone',
     rules: [
-      { required: true },
       PHONE_RULE
     ],
     component: 'Input',

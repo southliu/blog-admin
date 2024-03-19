@@ -1,7 +1,6 @@
 <template>
-  <ApiTreeSelect
-    multiple
-    :api="getGames"
+  <ApiSelect
+    :api="getSystemRoleAll"
     :fieldNames="{ label: 'name', value: 'id' }"
     @update="handleUpdate"
   />
@@ -12,11 +11,11 @@
  * @description: 游戏下拉组件
  */
 import type { SelectValue } from 'ant-design-vue/es/select';
-import { getGames } from '@/servers/platform/game';
-import ApiTreeSelect from '@/components/Selects/ApiTreeSelect.vue';
+import { getSystemRoleAll } from '@/servers/systems/role';
+import ApiSelect from '@/components/Selects/ApiSelect.vue';
 
 defineOptions({
-  name: 'GameSelect'
+  name: 'RoleSelect'
 });
 
 interface DefineEmits {

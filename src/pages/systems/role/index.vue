@@ -32,6 +32,14 @@
       </template>
 
       <template #operate="{ record }">
+        <BasicBtn
+          v-if="checkPermission(pagePermission.permission)"
+          class="btn-space"
+          :isLoading="isLoading"
+          @click="openPermission(record.id)"
+        >
+          权限
+        </BasicBtn>
         <UpdateBtn
           v-if="checkPermission(pagePermission.update)"
           class="btn-space"
@@ -62,17 +70,28 @@
       @handleFinish="handleCreate"
     />
   </BasicModal>
+
+  <PermissionDrawer
+    :isOpen="permissionConfig.isOpen"
+    :treeData="permissionConfig.treeData"
+    :checkedKeys="permissionConfig.checkedKeys"
+    @onClose="closePermission"
+    @onSubmit="permissionSubmit"
+  />
 </template>
 
 <script lang="ts" setup>
 import type { FormData } from '#/form';
 import type { BasicFormProps } from '@/components/Form/model';
 import type { CreateData, TableData, PaginationData } from '#/public';
+import type { DataNode } from 'ant-design-vue/lib/tree';
+import type { Key } from 'ant-design-vue/lib/vc-tree/interface';
 import { message } from 'ant-design-vue';
 import { onActivated, reactive, shallowRef, ref } from 'vue';
 import { checkPermission } from '@/utils/permissions';
 import { ADD_TITLE, EDIT_TITLE, PAGE_SIZE } from '@/utils/config';
-import { UpdateBtn, DeleteBtn, CreateBtn } from '@/components/Buttons';
+import { UpdateBtn, DeleteBtn, BasicBtn, CreateBtn } from '@/components/Buttons';
+import { getPermission, savePermission } from '@/servers/systems/menu';
 import {
   searchList,
   createList,
@@ -80,31 +99,46 @@ import {
   pagePermission
 } from './model';
 import {
-  getSystemUserPage,
-  getSystemUserById,
-  createSystemUser,
-  updateSystemUser,
-  deleteSystemUser,
-} from '@/servers/systems/user';
+  getSystemRolePage,
+  getSystemRoleById,
+  createSystemRole,
+  updateSystemRole,
+  deleteSystemRole,
+} from '@/servers/systems/role';
 import BtnRow from '@/components/BtnRow/index.vue';
 import BasicContent from '@/components/Content/BasicContent.vue';
 import BasicTable from '@/components/Table/BasicTable.vue';
 import BasicSearch from '@/components/Search/BasicSearch.vue';
 import BasicForm from '@/components/Form/BasicForm.vue';
 import BasicModal from '@/components/Modal/BasicModal.vue';
+import PermissionDrawer from './components/PermissionDrawer.vue';
+
+interface PermissionConfig {
+  id: string;
+  isOpen: boolean;
+  checkedKeys: Key[];
+  treeData: DataNode[];
+}
 
 defineOptions({
-  name: 'SystemsUser'
+  name: 'SystemsRole'
 });
 
 const isLoading = ref(false);
 const isCreateLoading = ref(false);
 const createFormRef = shallowRef<BasicFormProps>();
 
+// 权限配置
+const permissionConfig = reactive<PermissionConfig>({
+  id: '',
+  isOpen: false,
+  checkedKeys: [],
+  treeData: []
+});
+
 // 初始化新增数据
 const initCreate = {
   status: 1,
-  user: { name: { test: '1234' } }
 };
 
 // 搜索数据
@@ -139,7 +173,7 @@ const getPage = async () => {
   const query = { ...newPagination, ...searchData.value };
   try {
     isLoading.value = true;
-    const { code, data } = await getSystemUserPage(query);
+    const { code, data } = await getSystemRolePage(query);
     if (Number(code) !== 200) return;
     const { items, total } = data;
     tableData.value = items;
@@ -184,7 +218,7 @@ const onUpdate = async (record: FormData) => {
 
   try {
     isCreateLoading.value = true;
-    const { code, data } = await getSystemUserById(id as string);
+    const { code, data } = await getSystemRoleById(id as string);
     if (Number(code) !== 200) return;
     creates.data = data;
   } finally {
@@ -199,7 +233,7 @@ const onUpdate = async (record: FormData) => {
 const handleCreate = async (values: FormData) => {
   try {
     isCreateLoading.value = true;
-    const functions = () => creates.id ? updateSystemUser(creates.id, values) : createSystemUser(values);
+    const functions = () => creates.id ? updateSystemRole(creates.id, values) : createSystemRole(values);
     const { code, message: resultMessage } = await functions();
     if (Number(code) !== 200) return;
     getPage();
@@ -225,7 +259,7 @@ const onCloseCreate = () => {
 const handleDelete = async (id: string | number) => {
   try {
     isLoading.value = true;
-    const data = await deleteSystemUser(id as string);
+    const data = await deleteSystemRole(id as string);
     if (data?.code === 200) {
       message.success(data?.message || '删除成功');
       getPage();
@@ -244,5 +278,45 @@ const handlePagination = (page: number, pageSize: number) => {
   pagination.page = page;
   pagination.pageSize = pageSize;
   getPage();
+};
+
+/** 开启权限 */
+const openPermission = async (id: string) => {
+  try {
+    isLoading.value = true;
+    const params = { roleId: id };
+    const { code, data } = await getPermission(params);
+    if (Number(code) !== 200) return;
+    const { defaultCheckedKeys, treeData } = data;
+    permissionConfig.id = id;
+    permissionConfig.treeData = treeData;
+    permissionConfig.checkedKeys = Object.values(defaultCheckedKeys);
+    permissionConfig.isOpen = true;
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+/** 关闭权限 */
+const closePermission = () => {
+  permissionConfig.isOpen = false;
+};
+
+/**
+ * 权限提交
+ */
+const permissionSubmit = async (checked: Key[]) => {
+  try {
+    isLoading.value = true;
+    const params = {
+      menuIds: checked,
+      RoleId: permissionConfig.id
+    };
+    const data = await savePermission(params);
+    message.success(data.message || '授权成功');
+    permissionConfig.isOpen = false;
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>

@@ -63,7 +63,7 @@ import BasicTable from '@/components/Table/BasicTable.vue';
 import BasicSearch from '@/components/Search/BasicSearch.vue';
 
 defineOptions({
-  name: 'ContentArticle'
+  name: 'OperationsArticle'
 });
 
 const router = useRouter();
@@ -168,3 +168,4 @@ const handlePagination = (page: number, pageSize: number) => {
   getPage();
 };
 </script>
+@/servers/operations/article
