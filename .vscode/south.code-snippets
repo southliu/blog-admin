@@ -1,0 +1,31 @@
+{
+    "apifn": {
+        "scope": "typescript",
+        "prefix": "apifn",
+        "body": [
+            "try {",
+            "  isLoading.value = true;",
+            "  const { code, data } = await $1();",
+            "  if (Number(code) !== 200) return;",
+            "  list.value = data || [];",
+            "} finally {",
+            "  isLoading.value = false;",
+            "}"
+        ]
+    },
+    "opapi": {
+        "scope": "typescript",
+        "prefix": "apiOption",
+        "body": [
+            "try {",
+            "  isLoading.value = true;",
+            "  const { code } = await $1();",
+            "  if (Number(code) !== 200) return;",
+            "  message.success('操作成功!');",
+            "  emit('finish');",
+            "} finally {",
+            "  isLoading.value = false;",
+            "}",
+        ]
+    },
+}

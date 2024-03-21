@@ -56,8 +56,8 @@
   >
     <BasicForm
       ref="createFormRef"
-      :list="createList"
-      :labelCol="{ span: 6 }"
+      :list="createList(!!creates.id)"
+      :labelCol="{ style: { width: '100px' } }"
       :data="creates.data"
       @handleFinish="handleCreate"
     />
@@ -92,6 +92,7 @@ import BasicTable from '@/components/Table/BasicTable.vue';
 import BasicSearch from '@/components/Search/BasicSearch.vue';
 import BasicForm from '@/components/Form/BasicForm.vue';
 import BasicModal from '@/components/Modal/BasicModal.vue';
+import { encryptMd5 } from '@/utils/crypto';
 
 defineOptions({
   name: 'SystemsUser'
@@ -104,7 +105,6 @@ const createFormRef = shallowRef<BasicFormProps>();
 // 初始化新增数据
 const initCreate = {
   status: 1,
-  user: { name: { test: '1234' } }
 };
 
 // 搜索数据
@@ -199,6 +199,11 @@ const onUpdate = async (record: FormData) => {
 const handleCreate = async (values: FormData) => {
   try {
     isCreateLoading.value = true;
+
+    if (values.password) {
+      values.password = encryptMd5(values.password as string);
+    }
+
     const functions = () => creates.id ? updateSystemUser(creates.id, values) : createSystemUser(values);
     const { code, message: resultMessage } = await functions();
     if (Number(code) !== 200) return;

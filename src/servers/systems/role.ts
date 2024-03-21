@@ -36,7 +36,7 @@ export function getSystemRoleById(id: string) {
   return request.get<{
     defaultCheckedKeys: Key[];
     treeData: DataNode[];
-  }>(`${API.URL}/detail?id=${id}`);
+  }>(`${API.URL}/${id}`);
 }
 
 /**

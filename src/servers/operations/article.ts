@@ -21,7 +21,7 @@ export function getArticlePage(data: PaginationData) {
  * @param id - 唯一标识
  */
 export function getArticleById(id: string) {
-  return request.get(`${API.URL}/detail?id=${id}`);
+  return request.get(`${API.URL}/${id}`);
 }
 
 /**

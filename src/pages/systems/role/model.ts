@@ -17,7 +17,7 @@ export const pagePermission = {
 // 搜索数据
 export const searchList: FormList[] = [
   {
-    label: '名字',
+    label: '名称',
     name: 'name',
     component: 'Input',
     componentProps: {

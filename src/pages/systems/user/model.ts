@@ -2,7 +2,7 @@ import type { FormList } from "#/form";
 import type { TableColumnsProps } from "#/public";
 import { FORM_REQUIRED } from "@/utils/config";
 import { OPEN_CLOSE } from "@/utils/constants";
-import { PHONE_RULE } from "@/utils/verify";
+import { PASSWORD_RULE, PHONE_RULE } from "@/utils/verify";
 
 // 权限前缀
 const permissionPrefix = '/system/user';
@@ -18,7 +18,7 @@ export const pagePermission = {
 // 搜索数据
 export const searchList: FormList[] = [
   {
-    label: '名字',
+    label: '姓名',
     name: 'nickName',
     component: 'Input',
     componentProps: {
@@ -82,12 +82,25 @@ export const tableColumns: TableColumnsProps[] = [
 ];
 
 // 新增数据
-export const createList: FormList[] = [
+export const createList = (isUpdate: boolean): FormList[] => [
   {
     label: '用户名',
     name: 'username',
     rules: FORM_REQUIRED,
     component: 'Input',
+    componentProps: {
+      maxlength: 32
+    }
+  },
+  {
+    label: '密码',
+    name: 'password',
+    rules: [
+      { required: true, message: '请输入密码' },
+      PASSWORD_RULE
+    ],
+    hidden: isUpdate,
+    component: 'InputPassword',
     componentProps: {
       maxlength: 32
     }
@@ -103,7 +116,7 @@ export const createList: FormList[] = [
   },
   {
     label: '角色',
-    name: 'roleName',
+    name: 'roleId',
     rules: FORM_REQUIRED,
     component: 'RoleSelect',
     componentProps: {
@@ -112,12 +125,18 @@ export const createList: FormList[] = [
   {
     label: '电话',
     name: 'phone',
-    rules: [
-      PHONE_RULE
-    ],
+    rules: [PHONE_RULE],
     component: 'Input',
     componentProps: {
       maxlength: 20
+    }
+  },
+  {
+    label: '邮箱',
+    name: 'email',
+    component: 'Input',
+    componentProps: {
+      maxlength: 30
     }
   },
   {

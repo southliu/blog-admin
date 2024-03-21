@@ -56,7 +56,7 @@ import { checkPermission } from '@/utils/permissions';
 import { usePublicStore } from '@/stores/public';
 import { PAGE_SIZE } from '@/utils/config';
 import { storeToRefs } from 'pinia';
-import { getArticlePage, deleteArticle } from '@/servers/content/article';
+import { getArticlePage, deleteArticle } from '@/servers/operations/article';
 import BtnRow from '@/components/BtnRow/index.vue';
 import BasicContent from '@/components/Content/BasicContent.vue';
 import BasicTable from '@/components/Table/BasicTable.vue';
