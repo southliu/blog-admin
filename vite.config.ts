@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
-import { createProxy } from './build/vite/proxy';
 import { handleEnv } from './build/utils/helper';
+import { createProxy } from './build/vite/proxy';
 import { createVitePlugins } from './build/plugins';
 import { buildOptions } from './build/vite/build';
 
@@ -19,22 +19,19 @@ export default defineConfig(({ mode }) => {
         '#': '/types'
       }
     },
-    server: {
-      port: VITE_SERVER_PORT,
-      open: true,
-      // 跨域处理
-      proxy: createProxy(VITE_PROXY)
-    },
-    test: {
-      environment: 'jsdom',
-      setupFiles: './tests/index.ts'
-    },
     css: {
       preprocessorOptions: {
         less: {
-          javascriptEnabled: true
+          javascriptEnabled: true,
+          charset: false
         },
       },
+    },
+    server: {
+      open: true,
+      port: VITE_SERVER_PORT,
+      // 跨域处理
+      proxy: createProxy(VITE_PROXY)
     },
     build: buildOptions()
   };
