@@ -10,7 +10,7 @@ import { useCommonStore } from '@/hooks/useCommonStore';
 import { ADD_TITLE, EDIT_TITLE } from '@/utils/config';
 import { UpdateBtn, DeleteBtn } from '@/components/Buttons';
 import {
-  getMenuPage,
+  getMenuList,
   getMenuById,
   createMenu,
   updateMenu,
@@ -21,7 +21,6 @@ import BasicSearch from '@/components/Search/BasicSearch';
 import BasicModal from '@/components/Modal/BasicModal';
 import BasicForm from '@/components/Form/BasicForm';
 import BasicTable from '@/components/Table/BasicTable';
-import BasicPagination from '@/components/Pagination/BasicPagination';
 
 // 当前行数据
 interface RowData {
@@ -30,8 +29,6 @@ interface RowData {
 
 // 初始化搜索数据
 const initSearch = {
-  page: 1,
-  pageSize: 20
 };
 
 // 初始化新增数据
@@ -49,15 +46,12 @@ function Page() {
   const [createTitle, setCreateTitle] = useState(ADD_TITLE(t));
   const [createId, setCreateId] = useState('');
   const [createData, setCreateData] = useState<FormData>(initCreate);
-  const [page, setPage] = useState(initSearch.page);
-  const [pageSize, setPageSize] = useState(initSearch.pageSize);
-  const [total, setTotal] = useState(0);
   const [tableData, setTableData] = useState<FormData[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
   const { permissions } = useCommonStore();
 
   // 权限前缀
-  const permissionPrefix = '/authority/menu';
+  const permissionPrefix = '/system/menu';
 
   // 权限
   const pagePermission: PagePermission = {
@@ -72,8 +66,7 @@ function Page() {
    * @param values - 表单返回数据
    */
   const onSearch = (values: FormData) => {
-    setPage(1);
-    handleSearch({ page: 1, pageSize, ...values });
+    handleSearch(values);
   };
 
   /**
@@ -83,12 +76,10 @@ function Page() {
   const handleSearch = useCallback(async (values: FormData) => {
     try {
       setLoading(true);
-      const res = await getMenuPage(values);
+      const res = await getMenuList({...values, isAll: true});
       const { code, data } = res;
       if (Number(code) !== 200) return;
-      const { items, total } = data;
-      setTotal(total);
-      setTableData(items);
+      setTableData(data);
     } finally {
       setLoading(false);
     }
@@ -140,7 +131,7 @@ function Page() {
   /** 获取表格数据 */
   const getPage = () => {
     const formData = searchFormRef.current?.getFieldsValue() || {};
-    const params = { ...formData, page, pageSize };
+    const params = { ...formData };
     handleSearch(params);
   };
 
@@ -178,18 +169,6 @@ function Page() {
       setLoading(false);
     }
   };
-
-  /**
-   * 处理分页
-   * @param page - 当前页数
-   * @param pageSize - 每页条数
-   */
-  const onChangePagination = useCallback((page: number, pageSize: number) => {
-    setPage(page);
-    setPageSize(pageSize);
-    const formData = searchFormRef.current?.getFieldsValue();
-    handleSearch({ ...formData, page, pageSize });
-  }, [handleSearch]);
 
   /**
    * 渲染操作
@@ -235,14 +214,6 @@ function Page() {
           loading={isLoading}
           columns={tableColumns(t, optionRender)}
           dataSource={tableData}
-        />
-
-        <BasicPagination
-          disabled={isLoading}
-          current={page}
-          pageSize={pageSize}
-          total={total}
-          onChange={onChangePagination}
         />
 
         <BasicModal

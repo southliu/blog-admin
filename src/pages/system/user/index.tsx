@@ -67,7 +67,7 @@ function Page() {
   const { permissions } = useCommonStore();
 
   // 权限前缀
-  const permissionPrefix = '/authority/user';
+  const permissionPrefix = '/system/user';
   
   // 权限
   const pagePermission: PagePermission = {
@@ -75,7 +75,7 @@ function Page() {
     create: checkPermission(`${permissionPrefix}/create`, permissions),
     update: checkPermission(`${permissionPrefix}/update`, permissions),
     delete: checkPermission(`${permissionPrefix}/delete`, permissions),
-    permission: checkPermission(`${permissionPrefix}/authority`, permissions)
+    permission: checkPermission(`${permissionPrefix}/systems`, permissions)
   };
 
   /**

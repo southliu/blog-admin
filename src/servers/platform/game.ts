@@ -1,7 +1,7 @@
 import { request } from '@/servers/request';
 
 enum API {
-  COMMON_URL = '/authority/common',
+  COMMON_URL = '/systems/common',
 }
 
 interface Result {

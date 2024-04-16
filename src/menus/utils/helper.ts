@@ -360,7 +360,7 @@ export function getFirstMenu(
  * 菜单数据处理-去除多余字段
  * @param menus - 菜单数据
  */
-export function handleFilterMenus(menus: SideMenu[]): SideMenu[] {
+export function handleFilterMenus(menus: SideMenu[], level = 0): SideMenu[] {
   const currentItem: SideMenu[] = [];
 
   for (let i = 0; i < menus?.length; i++) {
@@ -368,7 +368,8 @@ export function handleFilterMenus(menus: SideMenu[]): SideMenu[] {
     let children: SideMenu[] = [];
 
     if (item.children?.length) {
-      children = handleFilterMenus(item.children);
+      const newLevel = level + 1;
+      children = handleFilterMenus(item.children, newLevel);
     }
 
     const data: Partial<SideMenu> = { ...item };
@@ -404,7 +405,7 @@ export function handleFilterNav(list: string[]): NavData[] {
  * @param permissions - 权限
  */
 function hasPermission(route: SideMenu, permissions: string[]): boolean {
-  return permissions?.includes(route?.rule || '');
+  return permissions?.includes(route?.permission || '');
 }
 
 /**

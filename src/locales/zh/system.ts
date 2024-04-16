@@ -4,8 +4,6 @@ export default {
   permissions: '权限',
   authorizationSuccessful: '授权成功',
   state: '状态',
-  module: '模块',
-  controller: '控制器',
   createMenu: '创建菜单',
   age: '年龄',
   role: '角色',

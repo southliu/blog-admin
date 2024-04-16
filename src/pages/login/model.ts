@@ -26,7 +26,7 @@ interface Roles {
 // 接口返回数据
 export interface LoginResult {
   token: string;
-  user: User;
-  permissions: Permissions[];
+  userInfo: User;
+  permissions: string[];
   roles: Roles[];
 }

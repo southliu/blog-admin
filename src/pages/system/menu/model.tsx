@@ -2,7 +2,7 @@ import type { FormList } from "#/form";
 import type { TFunction } from "i18next";
 import type { TableColumn, TableOptions } from '#/public';
 import { FORM_REQUIRED } from '@/utils/config';
-import { MENU_ACTIONS, MENU_MODULE, MENU_STATUS } from '@/utils/constants';
+import { MENU_STATUS } from '@/utils/constants';
 import { valueToLabel } from "@/utils/helper";
 
 // 搜索数据
@@ -10,25 +10,20 @@ export const searchList = (t: TFunction): FormList[] => [
   {
     label: t('system.state'),
     name: 'status',
+    wrapperCol: 100,
     component: 'Select',
     componentProps: {
       options: MENU_STATUS
     }
   },
   {
-    label: t('system.module'),
-    name: 'module',
-    wrapperCol: 170,
-    component: 'Select',
+    label: t('public.name'),
+    name: 'label',
+    component: 'Input',
     componentProps: {
-      options: MENU_MODULE
+      maxLength: 200
     }
   },
-  {
-    label: t('system.controller'),
-    name: 'controller',
-    component: 'Input'
-  }
 ];
 
 /**
@@ -44,7 +39,7 @@ export const tableColumns = (t: TFunction, optionRender: TableOptions<object>): 
     },
     {
       title: t('public.name'),
-      dataIndex: 'name',
+      dataIndex: 'label',
       width: 200
     },
     {
@@ -56,23 +51,13 @@ export const tableColumns = (t: TFunction, optionRender: TableOptions<object>): 
       )
     },
     {
-      title: t('system.module'),
-      dataIndex: 'module',
-      width: 200
-    },
-    {
-      title: t('system.controller'),
-      dataIndex: 'controller',
-      width: 200
-    },
-    {
       title: t('public.creationTime'),
-      dataIndex: 'created_at',
+      dataIndex: 'createdAt',
       width: 200
     },
     {
       title: t('public.updateTime'),
-      dataIndex: 'updated_at',
+      dataIndex: 'updatedAt',
       width: 200
     },
     {
@@ -102,28 +87,4 @@ export const createList = (t: TFunction, id: string): FormList[] => [
       options: MENU_STATUS
     }
   },
-  {
-    label: t('system.module'),
-    name: 'module',
-    rules: FORM_REQUIRED,
-    component: 'Select',
-    componentProps: {
-      options: MENU_MODULE
-    }
-  },
-  {
-    label: t('system.controller'),
-    name: 'controller',
-    rules: FORM_REQUIRED,
-    component: 'Input'
-  },
-  {
-    label: t('system.createMenu'),
-    name: 'actions',
-    hidden: !!id,
-    component: 'CheckboxGroup',
-    componentProps: {
-      options: MENU_ACTIONS
-    }
-  }
 ];

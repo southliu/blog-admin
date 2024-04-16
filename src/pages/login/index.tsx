@@ -16,7 +16,6 @@ import { useToken } from '@/hooks/useToken';
 import { setThemeValue } from '@/stores/public';
 import { setMenuList } from '@/stores/menu';
 import { getMenuList } from '@/servers/system/menu';
-import { permissionsToArray } from '@/utils/permissions';
 import { setPermissions, setUserInfo } from '@/stores/user';
 import { useCommonStore } from '@/hooks/useCommonStore';
 import { getPermissions } from '@/servers/permissions';
@@ -65,11 +64,10 @@ function Login() {
       setLoading(true);
       const { code, data } = await getPermissions({ refresh_cache: false });
       if (Number(code) !== 200) return;
-      const { user, permissions } = data;
-      const newPermissions = permissionsToArray(permissions);
-      dispatch(setUserInfo(user));
-      dispatch(setPermissions(newPermissions));
-      handleGoMenu(newPermissions);
+      const { userInfo, permissions } = data;
+      dispatch(setUserInfo(userInfo));
+      dispatch(setPermissions(permissions));
+      handleGoMenu(permissions);
     } finally {
       setLoading(false);
     }
@@ -117,17 +115,16 @@ function Login() {
       setLoading(true);
       const { code, data } = await login(values);
       if (Number(code) !== 200) return;
-      const { token, user, permissions } = data;
+      const { token, userInfo, permissions } = data;
 
       if (!permissions?.length || !token) {
         return messageApi.error({ content: t('login.notPermissions'), key: 'permissions' });
       }
 
-      const newPermissions = permissionsToArray(permissions);
       setToken(token);
-      dispatch(setUserInfo(user));
-      dispatch(setPermissions(newPermissions));
-      handleGoMenu(newPermissions);
+      dispatch(setUserInfo(userInfo));
+      dispatch(setPermissions(permissions));
+      handleGoMenu(permissions);
     } finally {
       setLoading(false);
     }
