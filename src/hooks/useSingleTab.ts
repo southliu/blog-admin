@@ -1,12 +1,20 @@
 import type { SideMenu } from '#/public';
-import { onActivated, onMounted, watch } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useRoute } from 'vue-router';
-import { setTitle } from '@/utils/helper';
-import { useTabStore } from '@/stores/tabs';
-import { useMenuStore } from '@/stores/menu';
-import { getMenuName, getOpenMenuByRouter } from '@/utils/menu';
+import type { AppDispatch } from '@/stores';
+import { useTranslation } from 'react-i18next';
+import { getMenuName, getOpenMenuByRouter, handleFilterNav } from '@/menus/utils/helper';
 import { ADD_TITLE, EDIT_TITLE } from '@/utils/config';
+import { setTitle } from '@/utils/helper';
+import { useDispatch } from 'react-redux';
+import { useCommonStore } from './useCommonStore';
+import { useLocation } from 'react-router-dom';
+import { useCallback, useEffect } from 'react';
+import { useActivate } from 'react-activation';
+import { setOpenKeys, setSelectedKeys } from '@/stores/menu';
+import {
+  addTabs,
+  setNav,
+  setActiveKey,
+} from '@/stores/tabs';
 
 /**
  * 单标签设置
@@ -18,45 +26,87 @@ export function useSingleTab(
   title?: string,
   name = 'id'
   ) {
-  const route = useRoute();
-  const menuStore = useMenuStore();
-  const tabStore = useTabStore();
-  const { menuList } = storeToRefs(menuStore);
+  const dispatch: AppDispatch = useDispatch();
+  const { t, i18n } = useTranslation();
+  const { pathname, search } = useLocation();
   const {
-    setActiveKey,
-    addTabs,
-    setNav
-  } = tabStore;
-  const {
-    setOpenKeys,
-    setSelectedKeys
-  } = menuStore;
+    menuList,
+    isPhone,
+    isCollapsed
+  } = useCommonStore();
+  const uri = pathname + search;
+
+  // 处理默认展开
+  useEffect(() => {
+    const newOpenKey = getOpenMenuByRouter(fatherPath);
+    if (!isPhone && !isCollapsed) {
+      dispatch(setOpenKeys(newOpenKey));
+      dispatch(setSelectedKeys(fatherPath));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
-  onMounted(() => {
-    handleTitleAndTab();
+  /**
+   * 添加标签
+   * @param path - 路径
+   */
+  const handleAddTab = useCallback((path = pathname) => {
+    // 当值为空时匹配路由
+    if (path === '/') return;
+    const title = handleGetTitle();
+    const nav = handleGetNav();
+    const newTab = {
+      label: title,
+      labelEn: title,
+      labelZh: title,
+      key: uri,
+      nav: handleFilterNav(nav)
+    };
+    setTitle(t, title);
+    dispatch(setActiveKey(newTab.key));
+    dispatch(setNav(newTab.nav));
+    dispatch(addTabs(newTab));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, search]);
+
+  useEffect(() => {
+    handleAddTab();
+  }, [handleAddTab]);
+
+  useActivate(() => {
+    handleAddTab();
   });
 
-  onActivated(() => {
-    handleTitleAndTab();
-  });
+  /** 获取路由对应名称 */
+  const getNameByRoute = (): string => {
+    const route = search?.substring(1, search.length);
+    const list = route?.split('&');
 
-  watch(() => menuList.value, () => {
-    if (!route.fullPath?.includes(fatherPath)) return;
-    handleTitleAndTab();
-  });
+    for (let i = 0; i < list?.length; i++) {
+      const item = list[i];
+      const arr = item?.split('=');
+      const key = arr?.[0];
+      const value = arr?.[1];
+      if (key === name) {
+        return value;
+      }
+    }
+
+    return '';
+  };
 
   /** 设置标题 */
   const handleGetTitle = () => {
     let result = '', newUpdateTitle = '', newCreateTitle = '';
-    const routeName = (route.query?.[name] || '') as string;
+    const routeName = getNameByRoute();
 
     if (!title) {
-      const menuName = getMenuName(menuList.value, fatherPath);
-      newCreateTitle = `${title || ADD_TITLE}${menuName}`;
-      newUpdateTitle = `${EDIT_TITLE(routeName, menuName)}`;
+      const menuName = getMenuName(menuList, fatherPath, i18n.language);
+      newCreateTitle = `${title || ADD_TITLE(t)}${menuName}`;
+      newUpdateTitle = `${EDIT_TITLE(t, routeName, menuName)}`;
     } else {
       const label = routeName ? `(${routeName})` : '';
-       newCreateTitle = `${title || ADD_TITLE}${label}`;
+       newCreateTitle = `${title || ADD_TITLE(t)}${label}`;
        newUpdateTitle = `${title}${label}`;
     }
     result = routeName ? newUpdateTitle : newCreateTitle;
@@ -73,15 +123,14 @@ export function useSingleTab(
       for (let i = 0; i < list?.length; i++) {
         const item = list[i];
         const newNav = fatherName.concat([item.label]);
-        item.nav = newNav;
         
         if (item.key === path) {
-          result = item.nav;
+          result = newNav;
           return result;
         }
   
         if (item.children?.length) {
-          const childResult = deepData(item.children, path, item.nav);
+          const childResult = deepData(item.children, path, newNav);
           if (childResult?.length) {
             result = childResult;
             return result;
@@ -91,37 +140,9 @@ export function useSingleTab(
   
       return result;
     };
-    deepData(menuList.value, fatherPath);
+    deepData(menuList, fatherPath);
 
     return result;
-  };
-
-  /**
-   * 添加标签
-   * @param path - 路径
-   */
-  const handleTitleAndTab = (fullPath = route.fullPath) => {
-    // 当值为空时匹配路由
-    if (fullPath === '/' || !menuList.value?.length) return;
-
-    const nav = handleGetNav();
-    const title = handleGetTitle();
-    setTitle(title);
-    nav.push(title);
-
-    const newTab = {
-      label: title,
-      url: fullPath,
-      key: route.path,
-      nav
-    };
-    // 展开菜单
-    const newOpenKey = getOpenMenuByRouter(fatherPath);
-    setOpenKeys(newOpenKey);
-    setSelectedKeys([fatherPath]);
-    setActiveKey(newTab.key);
-    setNav(newTab.nav);
-    addTabs(newTab);
   };
 
   return [];

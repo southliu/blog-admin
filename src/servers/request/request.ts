@@ -41,17 +41,12 @@ class AxiosRequest {
         }
 
         // 如果存在post数据
-        if (typeof res.data === 'object') {
-          for (const key in res.data) {
-            url += `#${key}=${res.data[key]}`;
-          }
-        }
-        if (typeof res.data === 'string' && res.data?.[0] === '{' && res.data?.[res.data?.length - 1] === '}') {
+        if (res.data && res.data?.[0] === '{' && res.data?.[res.data?.length - 1] === '}') {
           const obj = JSON.parse(res.data);
           for (const key in obj) {
             url += `#${key}=${obj[key]}`;
           }
-        }
+        } 
 
         // 如果存在则删除该请求
         if (this.abortControllerMap.get(url)) {
@@ -111,40 +106,32 @@ class AxiosRequest {
    * @param url - 链接
    * @param options - 参数
    */
-  get<T = object>(url: string, options?: unknown) {
-    return this.instance.get(url, options || {}) as Promise<ServerResult<T>>;
+  get<T = object>(url: string, options = {}) {
+    return this.instance.get(url, options) as Promise<ServerResult<T>>;
   }
   /**
    * post请求
    * @param url - 链接
    * @param options - 参数
    */
-  post<T = object>(url: string, options?: unknown, config?: AxiosRequestConfig<object>) {
-    return this.instance.post(url, options || {}, config) as Promise<ServerResult<T>>;
+  post<T = object>(url: string, options = {}, config?: AxiosRequestConfig<object>) {
+    return this.instance.post(url, options, config) as Promise<ServerResult<T>>;
   }
   /**
    * put请求
    * @param url - 链接
    * @param options - 参数
    */
-  put<T = object>(url: string, options?: unknown, config?: AxiosRequestConfig<object>) {
-    return this.instance.put(url, options || {}, config) as Promise<ServerResult<T>>;
-  }
-  /**
-   * patch请求
-   * @param url - 链接
-   * @param options - 参数
-   */
-  patch<T = object>(url: string, options?: unknown, config?: AxiosRequestConfig<object>) {
-    return this.instance.patch(url, options || {}, config) as Promise<ServerResult<T>>;
+  put<T = object>(url: string, options = {}, config?: AxiosRequestConfig<object>) {
+    return this.instance.put(url, options, config) as Promise<ServerResult<T>>;
   }
   /**
    * delete请求
    * @param url - 链接
    * @param options - 参数
    */
-  delete<T = object>(url: string, options?: unknown) {
-    return this.instance.delete(url, options || {}) as Promise<ServerResult<T>>;
+  delete<T = object>(url: string, options = {}) {
+    return this.instance.delete(url, options) as Promise<ServerResult<T>>;
   }
 }
 

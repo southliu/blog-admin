@@ -1,8 +1,8 @@
 {
   "recommendations": [
-    "Vue.volar",
-    "Vue.vscode-typescript-vue-plugin",
     "antfu.iconify",
-    "voorjaar.windicss-intellisense"
+    "voorjaar.windicss-intellisense",
+    "streetsidesoftware.code-spell-checker",
+    "lokalise.i18n-ally"
   ]
 }

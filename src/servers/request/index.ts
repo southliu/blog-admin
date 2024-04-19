@@ -1,9 +1,6 @@
-import type { ErrorResult } from './types';
-import { message } from 'ant-design-vue';
+import { message } from '@/utils/staticAntd';
 import { getLocalInfo, removeLocalInfo } from '@/utils/local';
 import { TOKEN } from '@/utils/config';
-import { router } from '@/router';
-import { useUserStore } from '@/stores/user';
 import axios from 'axios';
 import AxiosRequest from './request';
 
@@ -13,6 +10,9 @@ const baseURL = process.env.NODE_ENV !== 'development' ? prefixUrl : '/api';
 
 // 请求配置
 export const request = creteRequest(baseURL);
+
+// TODO：创建多个请求
+// export const newRequest = creteRequest('/test');
 
 /**
  * 创建请求
@@ -40,12 +40,13 @@ function creteRequest(url: string) {
       responseInterceptors(res) {
         const { data } = res;
         // 权限不足
-        if (data?.code === 401 && !location.href?.includes('/login')) {
+        if (data?.code === 401) {
+          message.error('权限不足，请重新登录！');
           removeLocalInfo(TOKEN);
-          const { setPermissions } = useUserStore();
-          setPermissions([]);
-          router.push('/login');
-          handleError(data?.message || '权限不足，请重新登录！');
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 1000);
+          handleError(data?.message);
           return res;
         }
     
@@ -58,23 +59,13 @@ function creteRequest(url: string) {
         return res;
       },
       responseInterceptorsCatch(err) {
-        // 权限不足
-        if ((err?.response?.status === 401 || err.response?.data?.code === 401) && !location.href?.includes('/login')) {
-          removeLocalInfo(TOKEN);
-          const { setPermissions } = useUserStore();
-          setPermissions([]);
-          router.push('/login');
-          handleError(err.response?.data?.message || '权限不足，请重新登录！');
-          return err;
-        }
-
         // 取消重复请求则不报错
         if(axios.isCancel(err)) {
           err.data = err.data || {};
           return err;
         }
 
-        handleError((err as ErrorResult).response?.data?.message || '服务器错误！');
+        handleError('服务器错误！');
         return err;
       }
     }
@@ -88,11 +79,6 @@ function creteRequest(url: string) {
  */
 const handleError = (error: string, content?: string) => {
   console.error('错误信息:', error);
-
-  if (error && typeof error === 'object' && error !== null) {
-    error = '服务器错误';
-  }
-
   message.error({
     content: content || error || '服务器错误',
     key: 'error'
