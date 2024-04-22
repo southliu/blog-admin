@@ -52,7 +52,7 @@ export const searchList = (t: TFunction): FormList[] => [
       width: 400
     },
     {
-      title: t('system.state'),
+      title: t('public.state'),
       dataIndex: 'status',
       width: 200,
       render: (value: boolean) => (
@@ -90,7 +90,7 @@ export const createList = (t: TFunction): FormList[] => [
     component: 'Input'
   },
   {
-    label: t('system.state'),
+    label: t('public.state'),
     name: 'status',
     rules: FORM_REQUIRED,
     component: 'Select',

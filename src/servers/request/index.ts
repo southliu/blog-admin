@@ -11,9 +11,6 @@ const baseURL = process.env.NODE_ENV !== 'development' ? prefixUrl : '/api';
 // 请求配置
 export const request = creteRequest(baseURL);
 
-// TODO：创建多个请求
-// export const newRequest = creteRequest('/test');
-
 /**
  * 创建请求
  * @param url - 链接地址

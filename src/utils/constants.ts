@@ -38,3 +38,12 @@ export const MENU_STATUS: Constant[] = [
   { label: t('public.enable'), value: 1 },
   { label: t('public.disable'), value: 0 }
 ];
+
+/**
+ * 菜单类型
+ */
+export const MENU_TYPES: Constant[] = [
+  { label: t('system.directory'), value: 0 },
+  { label: t('system.menu'), value: 1 },
+  { label: t('system.button'), value: 2 },
+];

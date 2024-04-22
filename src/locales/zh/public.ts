@@ -59,4 +59,5 @@ export default {
   validateEmail: '{{label}}不是邮箱格式！',
   validateNumber: '{{label}}不是数字格式！',
   validateRange: '{{label}}必须大于{{min}}且小于{{max}}',
+  state: '状态',
 };
