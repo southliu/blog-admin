@@ -16,7 +16,6 @@ export function getTableHeight(element: HTMLDivElement | null): number {
 
   // 表格高度 = 屏幕高度 - 表格距离顶部高度 - 分页高度
   const tableHeight = clientHeight - top - paginationHeight;
-  console.log('tableHeight:', tableHeight)
 
   return tableHeight > 0 ? tableHeight - 65 : 450;
 }

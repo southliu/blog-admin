@@ -1,14 +1,14 @@
 import type { FormList } from "#/form";
 import type { TFunction } from "i18next";
 import type { TableColumn, TableOptions } from '#/public';
-import { FORM_REQUIRED } from '@/utils/config';
-import { MENU_STATUS } from '@/utils/constants';
+import { FORM_REQUIRED, EMPTY_VALUE } from '@/utils/config';
+import { MENU_STATUS, MENU_TYPES } from '@/utils/constants';
 import { valueToLabel } from "@/utils/helper";
 
 // 搜索数据
 export const searchList = (t: TFunction): FormList[] => [
   {
-    label: t('system.state'),
+    label: t('public.state'),
     name: 'status',
     wrapperCol: 100,
     component: 'Select',
@@ -22,6 +22,15 @@ export const searchList = (t: TFunction): FormList[] => [
     component: 'Input',
     componentProps: {
       maxLength: 200
+    }
+  },
+  {
+    label: t('public.type'),
+    name: 'type',
+    wrapperCol: 100,
+    component: 'Select',
+    componentProps: {
+      options: MENU_TYPES
     }
   },
 ];
@@ -43,11 +52,24 @@ export const tableColumns = (t: TFunction, optionRender: TableOptions<object>): 
       width: 200
     },
     {
-      title: t('system.state'),
-      dataIndex: 'status',
-      width: 200,
+      title: t('system.englishName'),
+      dataIndex: 'labelEn',
+      width: 200
+    },
+    {
+      title: t('public.state'),
+      dataIndex: 'enable',
+      width: 150,
       render: (value: number) => (
-        <span>{ valueToLabel(value, MENU_STATUS) }</span>
+        <span>{ valueToLabel(value, MENU_STATUS) || EMPTY_VALUE }</span>
+      )
+    },
+    {
+      title: t('public.type'),
+      dataIndex: 'type',
+      width: 150,
+      render: (value: number) => (
+        <span>{ valueToLabel(value, MENU_TYPES) || EMPTY_VALUE }</span>
       )
     },
     {
@@ -74,13 +96,18 @@ export const tableColumns = (t: TFunction, optionRender: TableOptions<object>): 
 export const createList = (t: TFunction, id: string): FormList[] => [
   {
     label: t('public.name'),
-    name: 'name',
+    name: 'label',
     rules: FORM_REQUIRED,
     component: 'Input'
   },
   {
-    label: t('system.state'),
-    name: 'status',
+    label: t('public.name'),
+    name: 'labelEn',
+    component: 'Input'
+  },
+  {
+    label: t('public.state'),
+    name: 'type',
     rules: FORM_REQUIRED,
     component: 'Select',
     componentProps: {
