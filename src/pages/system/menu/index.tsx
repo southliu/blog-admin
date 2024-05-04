@@ -55,7 +55,7 @@ function Page() {
 
   // 权限
   const pagePermission: PagePermission = {
-    page: checkPermission(`${permissionPrefix}/index`, permissions),
+    page: checkPermission(`${permissionPrefix}/search`, permissions),
     create: checkPermission(`${permissionPrefix}/create`, permissions),
     update: checkPermission(`${permissionPrefix}/update`, permissions),
     delete: checkPermission(`${permissionPrefix}/delete`, permissions)
@@ -87,8 +87,6 @@ function Page() {
 
   // 首次进入自动加载接口数据
   useEffect(() => { 
-    if (pagePermission.page) handleSearch({ ...initSearch });
-    // TODO: 重复请求测试，可删
     if (pagePermission.page) handleSearch({ ...initSearch });
   }, [handleSearch, pagePermission.page]);
 
