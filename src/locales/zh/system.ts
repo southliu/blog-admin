@@ -12,4 +12,6 @@ export default {
   directory: '目录',
   menu: '菜单',
   button: '按钮',
+  addTreeChildren: '添加下级',
+  parentId: '父级ID',
 };

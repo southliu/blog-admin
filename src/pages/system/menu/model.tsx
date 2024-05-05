@@ -95,6 +95,12 @@ export const tableColumns = (t: TFunction, optionRender: TableOptions<object>): 
 // 新增数据
 export const createList = (t: TFunction, id: string): FormList[] => [
   {
+    label: t('system.parentId'),
+    name: 'parentId',
+    rules: FORM_REQUIRED,
+    component: 'Input'
+  },
+  {
     label: t('public.name'),
     name: 'label',
     rules: FORM_REQUIRED,
