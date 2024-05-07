@@ -94,7 +94,7 @@ function Page() {
    * 点击新增
    * @param id
    */
-  const onCreate = (id: string) => {
+  const onCreate = (id?: string) => {
     setCreateOpen(true);
     setCreateTitle(ADD_TITLE(t));
     setCreateId('');

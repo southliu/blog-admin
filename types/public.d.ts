@@ -28,6 +28,10 @@ export interface SideMenu extends Omit<SubMenuType, 'children' | 'label' | 'icon
   label: string;
   labelEn: string;
   key: string;
+  sortNum?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  menuResource?: string;
   icon?: React.ReactNode | string;
   permission?: string; // 路由权限
   nav?: string[]; // 面包屑路径

@@ -408,10 +408,14 @@ export function handleFilterMenus(menus: SideMenu[], level = 0): SideMenu[] {
       children = handleFilterMenus(item.children, newLevel);
     }
 
-    const data: Partial<SideMenu> = { ...item };
+    const data: Partial<SideMenu> = { ...item, sortNum: undefined };
     if (children?.length) (data as SideMenu).children = children;
     if (!data.key) data.key = getChildrenKey(data.children, level)
     delete data.labelEn;
+    delete data.sortNum;
+    delete data.createdAt;
+    delete data.updatedAt;
+    delete data.menuResource;
 
     currentItem.push(data as SideMenu);
   }

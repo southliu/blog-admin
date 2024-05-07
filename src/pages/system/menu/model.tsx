@@ -57,6 +57,11 @@ export const tableColumns = (t: TFunction, optionRender: TableOptions<object>): 
       width: 200
     },
     {
+      title: t('system.sortNum'),
+      dataIndex: 'sortNum',
+      width: 100
+    },
+    {
       title: t('public.state'),
       dataIndex: 'enable',
       width: 150,

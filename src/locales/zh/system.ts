@@ -14,4 +14,5 @@ export default {
   button: '按钮',
   addTreeChildren: '添加下级',
   parentId: '父级ID',
+  sortNum: '序号',
 };
