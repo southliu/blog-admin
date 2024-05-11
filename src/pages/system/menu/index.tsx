@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { checkPermission } from '@/utils/permissions';
 import { useCommonStore } from '@/hooks/useCommonStore';
 import { ADD_TITLE, EDIT_TITLE } from '@/utils/config';
-import { UpdateBtn, DeleteBtn } from '@/components/Buttons';
+import { BasicBtn, UpdateBtn, DeleteBtn } from '@/components/Buttons';
 import {
   getMenuList,
   getMenuById,
@@ -90,12 +90,15 @@ function Page() {
     if (pagePermission.page) handleSearch({ ...initSearch });
   }, [handleSearch, pagePermission.page]);
 
-  /** 点击新增 */
-  const onCreate = () => {
+  /**
+   * 点击新增
+   * @param id
+   */
+  const onCreate = (id: string) => {
     setCreateOpen(true);
     setCreateTitle(ADD_TITLE(t));
     setCreateId('');
-    setCreateData(initCreate);
+    setCreateData({ ...initCreate, parentId: id });
   };
 
   /**
@@ -175,6 +178,16 @@ function Page() {
    */
   const optionRender: TableOptions<object> = (_, record) => (
     <>
+      {
+        pagePermission.create === true &&
+        <BasicBtn
+          className='mr-5px'
+          isLoading={isLoading}
+          onClick={() => onCreate((record as RowData).id)}
+        >
+          { t('system.addTreeChildren') }
+        </BasicBtn>
+      }
       {
         pagePermission.update === true &&
         <UpdateBtn
