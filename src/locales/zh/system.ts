@@ -15,4 +15,6 @@ export default {
   addTreeChildren: '添加下级',
   parentId: '父级ID',
   sortNum: '序号',
+  router: '路由',
+  icon: '图标',
 };
