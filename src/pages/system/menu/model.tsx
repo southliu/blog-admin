@@ -4,6 +4,8 @@ import type { TableColumn, TableOptions } from '#/public';
 import { FORM_REQUIRED, EMPTY_VALUE } from '@/utils/config';
 import { MENU_STATUS, MENU_TYPES } from '@/utils/constants';
 import { valueToLabel } from "@/utils/helper";
+import { getMenuList } from "@/servers/system/menu";
+import IconInput from './components/IconInput';
 
 // 搜索数据
 export const searchList = (t: TFunction): FormList[] => [
@@ -57,6 +59,11 @@ export const tableColumns = (t: TFunction, optionRender: TableOptions<object>): 
       width: 200
     },
     {
+      title: t('system.sortNum'),
+      dataIndex: 'sortNum',
+      width: 100
+    },
+    {
       title: t('public.state'),
       dataIndex: 'enable',
       width: 150,
@@ -98,7 +105,17 @@ export const createList = (t: TFunction, id: string): FormList[] => [
     label: t('system.parentId'),
     name: 'parentId',
     rules: FORM_REQUIRED,
-    component: 'Input'
+    component: 'ApiTreeSelect',
+    componentProps: {
+      api: getMenuList,
+      params: {
+        isAll: false
+      },
+      fieldNames: {
+        label: 'label',
+        value: 'id'
+      }
+    }
   },
   {
     label: t('public.name'),
@@ -107,17 +124,38 @@ export const createList = (t: TFunction, id: string): FormList[] => [
     component: 'Input'
   },
   {
-    label: t('public.name'),
+    label: t('system.englishName'),
     name: 'labelEn',
     component: 'Input'
   },
   {
-    label: t('public.state'),
+    label: t('public.type'),
     name: 'type',
     rules: FORM_REQUIRED,
     component: 'Select',
     componentProps: {
-      options: MENU_STATUS
+      options: MENU_TYPES
     }
+  },
+  {
+    label: t('system.permissions'),
+    name: 'permission',
+    component: 'Input'
+  },
+  {
+    label: t('system.sortNum'),
+    name: 'sortNum',
+    component: 'InputNumber'
+  },
+  {
+    label: t('system.router'),
+    name: 'route',
+    component: 'Input'
+  },
+  {
+    label: t('system.icon'),
+    name: 'icon',
+    component: 'customize',
+    render: IconInput,
   },
 ];

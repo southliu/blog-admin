@@ -33,7 +33,7 @@ const initSearch = {
 
 // 初始化新增数据
 const initCreate = {
-  status: 1
+  sortNum: 1,
 };
 
 function Page() {
@@ -94,7 +94,7 @@ function Page() {
    * 点击新增
    * @param id
    */
-  const onCreate = (id: string) => {
+  const onCreate = (id?: string) => {
     setCreateOpen(true);
     setCreateTitle(ADD_TITLE(t));
     setCreateId('');
