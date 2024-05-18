@@ -5,7 +5,7 @@ import { FORM_REQUIRED, EMPTY_VALUE } from '@/utils/config';
 import { MENU_STATUS, MENU_TYPES } from '@/utils/constants';
 import { valueToLabel } from "@/utils/helper";
 import { getMenuList } from "@/servers/system/menu";
-import IconInput from './components/IconInput';
+import IconSelect from './components/IconSelect';
 
 // 搜索数据
 export const searchList = (t: TFunction): FormList[] => [
@@ -100,16 +100,17 @@ export const tableColumns = (t: TFunction, optionRender: TableOptions<object>): 
 };
 
 // 新增数据
-export const createList = (t: TFunction, id: string): FormList[] => [
+export const createList = (t: TFunction): FormList[] => [
   {
     label: t('system.parentId'),
-    name: 'parentId',
+    name: 'pid',
     rules: FORM_REQUIRED,
     component: 'ApiTreeSelect',
     componentProps: {
       api: getMenuList,
       params: {
-        isAll: false
+        isAll: false,
+        isMenuSelect: true
       },
       fieldNames: {
         label: 'label',
@@ -156,6 +157,6 @@ export const createList = (t: TFunction, id: string): FormList[] => [
     label: t('system.icon'),
     name: 'icon',
     component: 'customize',
-    render: IconInput,
+    render: IconSelect,
   },
 ];
