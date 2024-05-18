@@ -237,7 +237,7 @@ function Page() {
         >
           <BasicForm
             formRef={createFormRef}
-            list={createList(t, createId)}
+            list={createList(t)}
             data={createData}
             labelCol={{ span: 4 }}
             wrapperCol={{ span: 19 }}

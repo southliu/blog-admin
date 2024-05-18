@@ -62,8 +62,6 @@ CreateBusiness();
 export function getComponent(t: TFunction, item: FormList) {
   const { component, componentProps } = item;
 
-  console.log('componentProps:', componentProps)
-
   // 当组件类型为自定义时
   if (component === 'customize') {
     const { render } = item;
