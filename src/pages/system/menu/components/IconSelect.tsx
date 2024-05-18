@@ -27,7 +27,7 @@ function IconInput(props: SelectProps) {
   function handleFilterList(list: string[], page = 1) {
     if (!list?.length) return [];
 
-    const start = (page - 1) * pageSize + 1;
+    const start = (page - 1) * pageSize;
     const end = pageSize * page;
     const result: string[] = [];
 
