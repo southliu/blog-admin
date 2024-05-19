@@ -79,7 +79,7 @@ function Page() {
       const res = await getMenuList({...values, isAll: true});
       const { code, data } = res;
       if (Number(code) !== 200) return;
-      setTableData(data);
+      setTableData(data as unknown as FormData[]);
     } finally {
       setLoading(false);
     }
@@ -228,7 +228,7 @@ function Page() {
         />
 
         <BasicModal
-          width={600}
+          width={1200}
           title={createTitle}
           open={isCreateOpen}
           confirmLoading={isCreateLoading}
@@ -237,6 +237,7 @@ function Page() {
         >
           <BasicForm
             formRef={createFormRef}
+            layout='inline'
             list={createList(t)}
             data={createData}
             labelCol={{ span: 4 }}

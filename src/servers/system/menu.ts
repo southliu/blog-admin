@@ -1,5 +1,6 @@
 import type { Key } from 'react';
 import type { DataNode } from 'antd/es/tree';
+import type { SideMenu } from '#/public';
 import type { FormData } from '#/form';
 import { request } from '@/servers/request';
 
@@ -12,7 +13,7 @@ enum API {
  * @param data - 请求数据
  */
 export function getMenuList(data?: Partial<FormData>) {
-  return request.get<FormData[]>(
+  return request.get<SideMenu[]>(
     `${API.URL}/list`,
     { params: data }
   );
