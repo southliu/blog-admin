@@ -3,11 +3,12 @@ import type { PagePermission, TableOptions } from '#/public';
 import type { FormFn } from '@/components/Form/BasicForm';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { searchList, createList, tableColumns } from './model';
-import { message } from 'antd';
+import { Col, Form, Row, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { checkPermission } from '@/utils/permissions';
 import { useCommonStore } from '@/hooks/useCommonStore';
 import { ADD_TITLE, EDIT_TITLE } from '@/utils/config';
+import { getComponent } from '@/components/Form/utils/componentMap';
 import { BasicBtn, UpdateBtn, DeleteBtn } from '@/components/Buttons';
 import {
   getMenuList,
@@ -19,8 +20,8 @@ import {
 import BasicContent from '@/components/Content/BasicContent';
 import BasicSearch from '@/components/Search/BasicSearch';
 import BasicModal from '@/components/Modal/BasicModal';
-import BasicForm from '@/components/Form/BasicForm';
 import BasicTable from '@/components/Table/BasicTable';
+import { filterFormItem, handleValuePropName } from '@/components/Form/utils/helper';
 
 // 当前行数据
 interface RowData {
@@ -38,6 +39,7 @@ const initCreate = {
 
 function Page() {
   const { t } = useTranslation();
+  const [form] = Form.useForm();
   const searchFormRef = useRef<FormFn>(null);
   const createFormRef = useRef<FormFn>(null);
   const [isCreateOpen, setCreateOpen] = useState(false);
@@ -49,6 +51,11 @@ function Page() {
   const [tableData, setTableData] = useState<FormData[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
   const { permissions } = useCommonStore();
+
+  useEffect(() => {
+    form.setFieldsValue(createData);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createData]);
 
   // 权限前缀
   const permissionPrefix = '/system/menu';
@@ -79,7 +86,7 @@ function Page() {
       const res = await getMenuList({...values, isAll: true});
       const { code, data } = res;
       if (Number(code) !== 200) return;
-      setTableData(data);
+      setTableData(data as unknown as FormData[]);
     } finally {
       setLoading(false);
     }
@@ -228,21 +235,38 @@ function Page() {
         />
 
         <BasicModal
-          width={600}
+          width={800}
           title={createTitle}
           open={isCreateOpen}
           confirmLoading={isCreateLoading}
           onOk={createSubmit}
           onCancel={closeCreate}
         >
-          <BasicForm
-            formRef={createFormRef}
-            list={createList(t)}
-            data={createData}
+          <Form
+            form={form}
             labelCol={{ span: 4 }}
-            wrapperCol={{ span: 19 }}
-            handleFinish={handleCreate}
-          />
+            onFinish={handleCreate}
+          >
+            <Row gutter={24}>
+              {
+                createList(t)?.map(item => (
+                  <Col span={12} key={String(item.name)}>
+                    <Form.Item
+                      {...filterFormItem(item)}
+                      key={`${item.name}`}
+                      label={item.label}
+                      name={item.name}
+                      rules={!item.hidden ? item.rules : []}
+                      className={item.hidden ? '!hidden' : ''}
+                      valuePropName={handleValuePropName(item.component)}
+                    >
+                      { getComponent(t, item) }
+                    </Form.Item>
+                  </Col>
+                ))
+              }
+            </Row>
+          </Form>
         </BasicModal>
       </>
     </BasicContent>
