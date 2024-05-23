@@ -3,7 +3,7 @@ import type { PagePermission, TableOptions } from '#/public';
 import type { FormFn } from '@/components/Form/BasicForm';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { searchList, createList, tableColumns } from './model';
-import { Col, Form, Row, message } from 'antd';
+import { Button, Col, Form, Row, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { checkPermission } from '@/utils/permissions';
 import { useCommonStore } from '@/hooks/useCommonStore';
@@ -22,6 +22,7 @@ import BasicSearch from '@/components/Search/BasicSearch';
 import BasicModal from '@/components/Modal/BasicModal';
 import BasicTable from '@/components/Table/BasicTable';
 import { filterFormItem, handleValuePropName } from '@/components/Form/utils/helper';
+import { Icon } from '@iconify/react';
 
 // 当前行数据
 interface RowData {
@@ -266,6 +267,29 @@ function Page() {
                 ))
               }
             </Row>
+            <div className='font-bold'>API接口权限：</div>
+            <Row gutter={24}>
+              {
+                ['', '', ''].map((item, index) => (
+                  <div key={index} className='w-full flex flex-wrap'>
+                    <Col span={12}>
+                      left
+                    </Col>
+                    <Col span={12}>
+                      right
+                    </Col>
+                  </div>
+                ))
+              }
+            </Row>
+            <Button
+              className='w-full mt-5px'
+              type="dashed"
+              block
+            >
+              <Icon icon='material-symbols:add' />
+              <span>新增</span>
+            </Button>
           </Form>
         </BasicModal>
       </>
