@@ -3,7 +3,7 @@ import type { PagePermission, TableOptions } from '#/public';
 import type { FormFn } from '@/components/Form/BasicForm';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { searchList, createList, tableColumns } from './model';
-import { Button, Col, Form, Row, message } from 'antd';
+import { Button, Col, Form, Input, Row, Select, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { checkPermission } from '@/utils/permissions';
 import { useCommonStore } from '@/hooks/useCommonStore';
@@ -23,6 +23,7 @@ import BasicModal from '@/components/Modal/BasicModal';
 import BasicTable from '@/components/Table/BasicTable';
 import { filterFormItem, handleValuePropName } from '@/components/Form/utils/helper';
 import { Icon } from '@iconify/react';
+import { API_METHODS } from '@/utils/constants';
 
 // 当前行数据
 interface RowData {
@@ -268,20 +269,42 @@ function Page() {
               }
             </Row>
             <div className='font-bold'>API接口权限：</div>
-            <Row gutter={24}>
-              {
-                ['', '', ''].map((item, index) => (
-                  <div key={index} className='w-full flex flex-wrap'>
-                    <Col span={12}>
-                      left
-                    </Col>
-                    <Col span={12}>
-                      right
-                    </Col>
-                  </div>
-                ))
-              }
+            <Row gutter={24} className='mb-5px'>
+              <Col span={4} className='font-bold'>
+                方法
+              </Col>
+              <Col span={20} className='font-bold'>
+                路径
+              </Col>
             </Row>
+            {
+              ['', '', ''].map((item, index) => (
+                <Row key={index} gutter={24} className='mb-15px'>
+                  <Col span={4}>
+                    <Select
+                      className='w-full'
+                      placeholder={t('public.inputPleaseSelect')}
+                      options={API_METHODS}
+                    />
+                  </Col>
+                  <Col span={18}>
+                    <Input
+                      placeholder={t('public.inputPleaseEnter')}
+                    />
+                  </Col>
+                  <Col span={2}>
+                    <div
+                      className='h-full flex items-center justify-center cursor-pointer'
+                    >
+                      <Icon
+                        icon='material-symbols:delete-outline'
+                        className='text-18px'
+                      />
+                    </div>
+                  </Col>
+                </Row>
+              ))
+            }
             <Button
               className='w-full mt-5px'
               type="dashed"
