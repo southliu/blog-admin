@@ -2,7 +2,7 @@ import type { FormData } from '#/form';
 import type { PagePermission, TableOptions } from '#/public';
 import type { FormFn } from '@/components/Form/BasicForm';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { searchList, createList, tableColumns } from './model';
+import { searchList, createList, tableColumns, type APIMethodData } from './model';
 import { Button, Col, Form, Input, Row, Select, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { checkPermission } from '@/utils/permissions';
@@ -51,6 +51,7 @@ function Page() {
   const [createId, setCreateId] = useState('');
   const [createData, setCreateData] = useState<FormData>(initCreate);
   const [tableData, setTableData] = useState<FormData[]>([]);
+  const [apiMethods, setApiMethods] = useState<APIMethodData[]>([{}]);
   const [messageApi, contextHolder] = message.useMessage();
   const { permissions } = useCommonStore();
 
@@ -136,6 +137,7 @@ function Page() {
   /** 关闭新增/修改弹窗 */
   const closeCreate = () => {
     setCreateOpen(false);
+    setApiMethods([{}]);
   };
 
   /** 获取表格数据 */
@@ -151,8 +153,13 @@ function Page() {
    */
   const handleCreate = async (values: FormData) => {
     try {
+      const params: FormData = {
+        ...values,
+        apiMethods
+      };
+
       setCreateLoading(true);
-      const functions = () => createId ? updateMenu(createId, values) : createMenu(values);
+      const functions = () => createId ? updateMenu(createId, params) : createMenu(params);
       const { code, message } = await functions();
       if (Number(code) !== 200) return;
       messageApi.success(message || t('public.successfulOperation'));
@@ -178,6 +185,35 @@ function Page() {
     } finally {
       setLoading(false);
     }
+  };
+
+  /** 添加api方法 */
+  const handleAddApiMethod = () => {
+    const newApiMethod: APIMethodData[] = JSON.parse(JSON.stringify(apiMethods));
+    newApiMethod?.push({});
+    setApiMethods(newApiMethod);
+  };
+
+  /**
+   * 删除api方法
+   * @param index - 下标
+   */
+  const handleDeleteApiMethod = (index: number) => {
+    const newApiMethod: APIMethodData[] = JSON.parse(JSON.stringify(apiMethods));
+    newApiMethod?.splice(index, 1);
+    setApiMethods(newApiMethod);
+  };
+
+  /**
+   * 修改api方法
+   * @param value - 值
+   * @param index - 下标
+   * @param type - 类型
+   */
+  const handleChangeItemApi = (value: string, index: number, type: 'method' | 'path') => {
+    const newApiMethod: APIMethodData[] = JSON.parse(JSON.stringify(apiMethods));
+    newApiMethod[index][type] = value;
+    setApiMethods(newApiMethod);
   };
 
   /**
@@ -278,23 +314,28 @@ function Page() {
               </Col>
             </Row>
             {
-              ['', '', ''].map((item, index) => (
+              apiMethods?.map((item, index) => (
                 <Row key={index} gutter={24} className='mb-15px'>
                   <Col span={4}>
                     <Select
+                      value={item.method}
                       className='w-full'
                       placeholder={t('public.inputPleaseSelect')}
                       options={API_METHODS}
+                      onChange={value => handleChangeItemApi(value, index, 'method')}
                     />
                   </Col>
                   <Col span={18}>
                     <Input
+                      value={item.path}
                       placeholder={t('public.inputPleaseEnter')}
+                      onChange={e => handleChangeItemApi(e.target.value, index, 'path')}
                     />
                   </Col>
                   <Col span={2}>
                     <div
                       className='h-full flex items-center justify-center cursor-pointer'
+                      onClick={() => handleDeleteApiMethod(index)}
                     >
                       <Icon
                         icon='material-symbols:delete-outline'
@@ -309,6 +350,7 @@ function Page() {
               className='w-full mt-5px'
               type="dashed"
               block
+              onClick={handleAddApiMethod}
             >
               <Icon icon='material-symbols:add' />
               <span>新增</span>
