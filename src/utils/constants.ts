@@ -47,3 +47,14 @@ export const MENU_TYPES: Constant[] = [
   { label: t('system.menu'), value: 1 },
   { label: t('system.button'), value: 2 },
 ];
+
+/**
+ * API方法
+ */
+export const API_METHODS: Constant[] = [
+  { label: 'GET', value: 'GET' },
+  { label: 'POST', value: 'POST' },
+  { label: 'PUT', value: 'PUT' },
+  { label: 'PATCH', value: 'PATCH' },
+  { label: 'DELETE', value: 'DELETE' },
+];
