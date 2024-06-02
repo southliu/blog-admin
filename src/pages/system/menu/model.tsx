@@ -7,6 +7,11 @@ import { valueToLabel } from "@/utils/helper";
 import { getMenuList } from "@/servers/system/menu";
 import IconSelect from './components/IconSelect';
 
+export interface APIMethodData {
+  method?: string;
+  path?: string;
+}
+
 // 搜索数据
 export const searchList = (t: TFunction): FormList[] => [
   {
