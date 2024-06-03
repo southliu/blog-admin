@@ -305,34 +305,34 @@ function Page() {
               }
             </Row>
             <div className='font-bold'>API接口权限：</div>
-            <Row gutter={24} className='mb-5px'>
-              <Col span={4} className='font-bold'>
+            <Row className='mb-5px'>
+              <Col flex='150px' className='font-bold mr-10px'>
                 方法
               </Col>
-              <Col span={20} className='font-bold'>
+              <Col flex={8} className='font-bold'>
                 路径
               </Col>
             </Row>
             {
               apiMethods?.map((item, index) => (
-                <Row key={index} gutter={24} className='mb-15px'>
-                  <Col span={4}>
+                <Row key={index} className='mb-15px'>
+                  <Col flex='150px' className='mr-10px'>
                     <Select
                       value={item.method}
-                      className='w-full'
+                      className='w-150px'
                       placeholder={t('public.inputPleaseSelect')}
                       options={API_METHODS}
                       onChange={value => handleChangeItemApi(value, index, 'method')}
                     />
                   </Col>
-                  <Col span={18}>
+                  <Col flex={8}>
                     <Input
                       value={item.path}
                       placeholder={t('public.inputPleaseEnter')}
                       onChange={e => handleChangeItemApi(e.target.value, index, 'path')}
                     />
                   </Col>
-                  <Col span={2}>
+                  <Col flex={1}>
                     <div
                       className='h-full flex items-center justify-center cursor-pointer'
                       onClick={() => handleDeleteApiMethod(index)}
