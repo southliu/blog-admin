@@ -1,5 +1,5 @@
 import type { FormData } from '#/form';
-import type { PagePermission, TableOptions } from '#/public';
+import type { PagePermission } from '#/public';
 import type { FormFn } from '@/components/Form/BasicForm';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { searchList, createList, tableColumns, type APIMethodData } from './model';
@@ -24,7 +24,7 @@ import BasicTable from '@/components/Table/BasicTable';
 import { filterFormItem, handleValuePropName } from '@/components/Form/utils/helper';
 import { Icon } from '@iconify/react';
 import { API_METHODS } from '@/utils/constants';
-import { useFilterColumns } from '@/hooks/useFilterColumns';
+import { FilterButton } from '@/components/TableFilter';
 
 // 当前行数据
 interface RowData {
@@ -43,6 +43,7 @@ const initCreate = {
 function Page() {
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const columns = tableColumns(t, optionRender);
   const searchFormRef = useRef<FormFn>(null);
   const createFormRef = useRef<FormFn>(null);
   const [isCreateOpen, setCreateOpen] = useState(false);
@@ -53,7 +54,6 @@ function Page() {
   const [createData, setCreateData] = useState<FormData>(initCreate);
   const [tableData, setTableData] = useState<FormData[]>([]);
   const [apiMethods, setApiMethods] = useState<APIMethodData[]>([{}]);
-  const [FilterButton] = useFilterColumns();
   const [messageApi, contextHolder] = message.useMessage();
   const { permissions } = useCommonStore();
 
@@ -223,8 +223,8 @@ function Page() {
    * @param _ - 当前值
    * @param record - 当前行参数
    */
-  const optionRender: TableOptions<object> = (_, record) => (
-    <>
+  function optionRender(_: unknown, record: object) {
+    return <>
       {
         pagePermission.create === true &&
         <BasicBtn
@@ -251,8 +251,8 @@ function Page() {
           handleDelete={() => onDelete((record as RowData).id)}
         />
       }
-    </>
-  );
+    </>;
+  }
 
   return (
     <BasicContent isPermission={pagePermission.page}>
@@ -267,7 +267,10 @@ function Page() {
           onCreate={onCreate}
           handleFinish={onSearch}
         >
-          <FilterButton />
+          <FilterButton
+            columns={columns}
+            className='!mb-5px'
+          />
         </BasicSearch>
         
         <BasicTable
