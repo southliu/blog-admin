@@ -6,7 +6,7 @@ import {
   Divider,
   Checkbox,
 } from 'antd';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UnorderedListOutlined } from '@ant-design/icons';
 
 /**
@@ -20,11 +20,18 @@ interface CheckboxList {
 
 interface Props extends ButtonProps {
   columns: TableProps['columns'];
+  getTableChecks: (checks: string[]) => void;
 }
 
 function FilterButton(props: Props) {
-  const { columns } = props;
+  const { columns, getTableChecks } = props;
   const [isOpen, setOpen] = useState(false);
+  const [list, setList] = useState<CheckboxList[]>([]);
+  const [checkList, setCheckList] = useState<string[]>([]);
+
+  useEffect(() => {
+    filterColumns(columns);
+  }, [columns]);
   
   /** 处理点击事件 */
   const handleClick = () => {
@@ -35,29 +42,50 @@ function FilterButton(props: Props) {
    * 过滤表格数据为多选组数据
    * @param columns - 表格数据
    */
-  const filterColumns = (columns: TableProps['columns']): CheckboxList[] => {
+  const filterColumns = (columns: TableProps['columns']) => {
     if (!columns?.length) return [];
-    const result: CheckboxList[] = [];
+    const result: CheckboxList[] = [], currentOptions: string[] = [];
 
     for (let i = 0; i < columns?.length; i++) {
       const item = columns[i];
+      const { dataIndex } = item as { dataIndex: string };
+
+      if (!item.hidden && dataIndex) {
+        currentOptions?.push(dataIndex);
+      }
+
       result.push({
         label: item.title as string,
-        value: (item as { dataIndex: string })?.dataIndex
+        value: dataIndex
       });
     }
 
-    return result;
+    setList(result);
+    setCheckList(currentOptions);
+  };
+
+  /**
+   * 监听多选组数据
+   * @param checkedValue - 已选数据
+   */
+  const onChangeCheckbox = (checkedValue: string[]) => {
+    setCheckList(checkedValue);
+  };
+
+  /** 处理筛选 */
+  const handleFilter = () => {
+    handleClick();
+    getTableChecks(checkList);
   };
 
   // 渲染内容
   const content = () => {
-    const list = filterColumns(columns);
-
     return (
       <div className='min-w-130px'>
         <Checkbox.Group
           className='flex flex-col !px-12px'
+          value={checkList}
+          onChange={onChangeCheckbox}
         >
           {
             list?.map(item => (
@@ -86,6 +114,7 @@ function FilterButton(props: Props) {
           <Button
             type='primary'
             size='small'
+            onClick={handleFilter}
           >
             筛选
           </Button>

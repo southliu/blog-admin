@@ -25,6 +25,7 @@ import { filterFormItem, handleValuePropName } from '@/components/Form/utils/hel
 import { Icon } from '@iconify/react';
 import { API_METHODS } from '@/utils/constants';
 import { FilterButton } from '@/components/TableFilter';
+import { handleFilterTable } from '@/components/TableFilter/utils/helper';
 
 // 当前行数据
 interface RowData {
@@ -54,6 +55,7 @@ function Page() {
   const [createData, setCreateData] = useState<FormData>(initCreate);
   const [tableData, setTableData] = useState<FormData[]>([]);
   const [apiMethods, setApiMethods] = useState<APIMethodData[]>([{}]);
+  const [tableFilters, setTableFilters] = useState<string[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
   const { permissions } = useCommonStore();
 
@@ -71,6 +73,14 @@ function Page() {
     create: checkPermission(`${permissionPrefix}/create`, permissions),
     update: checkPermission(`${permissionPrefix}/update`, permissions),
     delete: checkPermission(`${permissionPrefix}/delete`, permissions)
+  };
+
+  /**
+   * 获取勾选表格数据
+   * @param checks - 勾选
+   */
+  const getTableChecks = (checks: string[]) => {
+    setTableFilters(checks);
   };
 
   /**
@@ -270,12 +280,13 @@ function Page() {
           <FilterButton
             columns={columns}
             className='!mb-5px'
+            getTableChecks={getTableChecks}
           />
         </BasicSearch>
         
         <BasicTable
           loading={isLoading}
-          columns={tableColumns(t, optionRender)}
+          columns={handleFilterTable(columns, tableFilters)}
           dataSource={tableData}
         />
 
