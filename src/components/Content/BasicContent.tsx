@@ -22,7 +22,7 @@ function BasicContent(props: Props) {
             rounded-5
           `}
         >
-            { children }
+          { children }
         </div>
       }
       {

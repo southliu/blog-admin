@@ -24,8 +24,8 @@ import BasicTable from '@/components/Table/BasicTable';
 import { filterFormItem, handleValuePropName } from '@/components/Form/utils/helper';
 import { Icon } from '@iconify/react';
 import { API_METHODS } from '@/utils/constants';
-import { FilterButton } from '@/components/TableFilter';
 import { useFiler } from '@/components/TableFilter/hooks/useFiler';
+import FilterButton from '@/components/TableFilter';
 
 // 当前行数据
 interface RowData {
@@ -61,7 +61,7 @@ function Page() {
   const { permissions } = useCommonStore();
 
   useEffect(() => {
-    form?.setFieldsValue(createData);
+    form?.setFieldsValue?.(createData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createData]);
 

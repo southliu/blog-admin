@@ -100,7 +100,7 @@ function IconInput(props: SelectProps) {
       {...props}
       open={isOpen}
       options={[]}
-      notFoundContent={<span></span>}
+      notFoundContent={<span>暂无数据</span>}
       dropdownRender={contentRender}
       onDropdownVisibleChange={onDropdownVisibleChange}
     />
