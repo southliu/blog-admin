@@ -25,7 +25,7 @@ import { filterFormItem, handleValuePropName } from '@/components/Form/utils/hel
 import { Icon } from '@iconify/react';
 import { API_METHODS } from '@/utils/constants';
 import { FilterButton } from '@/components/TableFilter';
-import { handleFilterTable } from '@/components/TableFilter/utils/helper';
+import { useFiler } from '@/components/TableFilter/hooks/useFiler';
 
 // 当前行数据
 interface RowData {
@@ -57,10 +57,11 @@ function Page() {
   const [apiMethods, setApiMethods] = useState<APIMethodData[]>([{}]);
   const [tableFilters, setTableFilters] = useState<string[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
+  const [handleFilterTable] = useFiler();
   const { permissions } = useCommonStore();
 
   useEffect(() => {
-    form.setFieldsValue(createData);
+    form?.setFieldsValue(createData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [createData]);
 
