@@ -26,6 +26,7 @@ import { Icon } from '@iconify/react';
 import { API_METHODS } from '@/utils/constants';
 import { useFiler } from '@/components/TableFilter/hooks/useFiler';
 import FilterButton from '@/components/TableFilter';
+import Ellipsis from '@/components/Ellipsis';
 
 // 当前行数据
 interface RowData {
@@ -109,7 +110,7 @@ function Page() {
   }, []);
 
   // 首次进入自动加载接口数据
-  useEffect(() => { 
+  useEffect(() => {
     if (pagePermission.page) handleSearch({ ...initSearch });
   }, [handleSearch, pagePermission.page]);
 
@@ -269,6 +270,14 @@ function Page() {
     <BasicContent isPermission={pagePermission.page}>
       <>
         { contextHolder }
+        <div className='w-200px'>
+          <Ellipsis
+            lines={1}
+            tooltip
+          >
+            撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇
+          </Ellipsis>
+        </div>
         <BasicSearch
           formRef={searchFormRef}
           list={searchList(t)}
@@ -284,7 +293,7 @@ function Page() {
             getTableChecks={getTableChecks}
           />
         </BasicSearch>
-        
+
         <BasicTable
           loading={isLoading}
           columns={handleFilterTable(columns, tableFilters)}
