@@ -68,8 +68,8 @@ function Ellipsis(props: Props) {
 
   const renderContent = (
     <span
-      className='inline-block whitespace-nowrap overflow-hidden text-ellipsis break-all'
-      style={{ lineClamp: lines || 1 }}
+      className='w-full inline-block whitespace-nowrap overflow-hidden text-ellipsis break-all'
+      style={{ WebkitLineClamp: lines || 1 }}
     >
       { content }
     </span>
