@@ -21,7 +21,7 @@ function Ellipsis(props: Props) {
     fullWidthRecognition,
     children
   } = props;
-  const [content, setContent] = useState(children || '');
+  const [content, setContent] = useState('');
 
   useEffect(() => {
     if (children !== content) {
@@ -37,8 +37,7 @@ function Ellipsis(props: Props) {
 
       setContent(con);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [children]);
+  }, [children, content, fullWidthRecognition, length]);
 
   /**
    * 计算全角数量
@@ -67,12 +66,17 @@ function Ellipsis(props: Props) {
   };
 
   const renderContent = (
-    <span
-      className='w-full inline-block whitespace-nowrap overflow-hidden text-ellipsis break-all'
-      style={{ WebkitLineClamp: lines || 1 }}
-    >
-      { content }
-    </span>
+    <div className='inline-block'>
+      <span
+        className='line-clamp-1'
+        style={{
+          lineClamp: lines || 1,
+          WebkitLineClamp: lines || 1,
+        }}
+      >
+        { content }
+      </span>
+    </div>
   );
 
   return (
