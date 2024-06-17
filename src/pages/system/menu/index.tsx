@@ -26,7 +26,6 @@ import { Icon } from '@iconify/react';
 import { API_METHODS } from '@/utils/constants';
 import { useFiler } from '@/components/TableFilter/hooks/useFiler';
 import FilterButton from '@/components/TableFilter';
-import Ellipsis from '@/components/Ellipsis';
 
 // 当前行数据
 interface RowData {
@@ -270,14 +269,6 @@ function Page() {
     <BasicContent isPermission={pagePermission.page}>
       <>
         { contextHolder }
-        <div className='-200px'>
-          <Ellipsis
-            lines={2}
-            tooltip
-          >
-            撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇撒打算大苏打我的青蛙打网球废弃物服务器放服务器废弃物废弃物废弃物绯闻情妇
-          </Ellipsis>
-        </div>
         <BasicSearch
           formRef={searchFormRef}
           list={searchList(t)}
