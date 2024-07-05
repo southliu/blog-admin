@@ -1,9 +1,8 @@
 import type { FormData } from '#/form';
 import type { PagePermission } from '#/public';
-import type { FormFn } from '@/components/Form/BasicForm';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { searchList, createList, tableColumns, type APIMethodData } from './model';
-import { Button, Col, Form, Input, Row, Select, message } from 'antd';
+import { type FormInstance, Button, Col, Form, Input, Row, Select, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { checkPermission } from '@/utils/permissions';
 import { useCommonStore } from '@/hooks/useCommonStore';
@@ -45,25 +44,21 @@ function Page() {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const columns = tableColumns(t, optionRender);
-  const searchFormRef = useRef<FormFn>(null);
-  const createFormRef = useRef<FormFn>(null);
+  const createFormRef = useRef<FormInstance>(null);
+  const [isFetch, setFetch] = useState(false);
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isCreateLoading, setCreateLoading] = useState(false);
   const [createTitle, setCreateTitle] = useState(ADD_TITLE(t));
   const [createId, setCreateId] = useState('');
   const [createData, setCreateData] = useState<FormData>(initCreate);
+  const [searchData, setSearchData] = useState<FormData>({});
   const [tableData, setTableData] = useState<FormData[]>([]);
   const [apiMethods, setApiMethods] = useState<APIMethodData[]>([{}]);
   const [tableFilters, setTableFilters] = useState<string[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [handleFilterTable] = useFiler();
   const { permissions } = useCommonStore();
-
-  useEffect(() => {
-    form?.setFieldsValue?.(createData);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createData]);
 
   // 权限前缀
   const permissionPrefix = '/system/menu';
@@ -75,6 +70,20 @@ function Page() {
     update: checkPermission(`${permissionPrefix}/update`, permissions),
     delete: checkPermission(`${permissionPrefix}/delete`, permissions)
   };
+
+  useEffect(() => {
+    if (isFetch) getPage();
+  }, [isFetch])
+
+  useEffect(() => {
+    form?.setFieldsValue?.(createData);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [createData]);
+
+  // 首次进入自动加载接口数据
+  useEffect(() => {
+    if (pagePermission.page) getPage();
+  }, [pagePermission.page]);
 
   /**
    * 获取勾选表格数据
@@ -89,29 +98,9 @@ function Page() {
    * @param values - 表单返回数据
    */
   const onSearch = (values: FormData) => {
-    handleSearch(values);
+    setSearchData(values);
+    setFetch(true);
   };
-
-  /**
-   * 处理搜索
-   * @param values - 表单返回数据
-   */
-  const handleSearch = useCallback(async (values: FormData) => {
-    try {
-      setLoading(true);
-      const res = await getMenuList({...values, isAll: true});
-      const { code, data } = res;
-      if (Number(code) !== 200) return;
-      setTableData(data as unknown as FormData[]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // 首次进入自动加载接口数据
-  useEffect(() => {
-    if (pagePermission.page) handleSearch({ ...initSearch });
-  }, [handleSearch, pagePermission.page]);
 
   /**
    * 点击新增
@@ -144,7 +133,7 @@ function Page() {
 
   /** 表单提交 */
   const createSubmit = () => {
-    createFormRef.current?.handleSubmit();
+    createFormRef.current?.submit();
   };
 
   /** 关闭新增/修改弹窗 */
@@ -154,10 +143,19 @@ function Page() {
   };
 
   /** 获取表格数据 */
-  const getPage = () => {
-    const formData = searchFormRef.current?.getFieldsValue() || {};
-    const params = { ...formData };
-    handleSearch(params);
+  const getPage = async () => {
+    const params = { ...searchData, isAll: true };
+
+    try {
+      setLoading(true);
+      const res = await getMenuList(params);
+      const { code, data } = res;
+      if (Number(code) !== 200) return;
+      setTableData(data as unknown as FormData[]);
+    } finally {
+      setFetch(false);
+      setLoading(false);
+    }
   };
 
   /**
@@ -270,7 +268,6 @@ function Page() {
       <>
         { contextHolder }
         <BasicSearch
-          formRef={searchFormRef}
           list={searchList(t)}
           data={initSearch}
           isLoading={isLoading}

@@ -104,7 +104,7 @@ export function stringRang2DayjsRang(
 function getListKeyParam(list: FormList[], key: string): string {
   for (let i = 0; i < list.length; i++) {
     if (list[i].name === key) {
-      return (list[i]?.componentProps as DatePickerProps)?.format as string
+      return (list[i].componentProps as DatePickerProps)?.format as string
               || DATE_FORMAT;
     }
   }

@@ -2,10 +2,9 @@ import type { FormData } from '#/form';
 import type { DataNode } from 'antd/es/tree';
 import type { Key } from 'antd/es/table/interface';
 import type { PagePermission, TableOptions } from '#/public';
-import type { FormFn } from '@/components/Form/BasicForm';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createList, searchList, tableColumns } from './model';
-import { Button, message } from 'antd';
+import { type FormInstance, Button, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { checkPermission } from '@/utils/permissions';
 import { useCommonStore } from '@/hooks/useCommonStore';
@@ -45,15 +44,16 @@ const initCreate = {
 
 function Page() {
   const { t } = useTranslation();
-  const searchFormRef = useRef<FormFn>(null);
-  const createFormRef = useRef<FormFn>(null);
+  const createFormRef = useRef<FormInstance>(null);
   const [messageApi, contextHolder] = message.useMessage();
+  const [isFetch, setFetch] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isCreateLoading, setCreateLoading] = useState(false);
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [createTitle, setCreateTitle] = useState(ADD_TITLE(t));
   const [createId, setCreateId] = useState('');
   const [createData, setCreateData] = useState<FormData>(initCreate);
+  const [searchData, setSearchData] = useState<FormData>({});
   const [page, setPage] = useState(initSearch.page);
   const [pageSize, setPageSize] = useState(initSearch.pageSize);
   const [total, setTotal] = useState(0);
@@ -68,7 +68,7 @@ function Page() {
 
   // 权限前缀
   const permissionPrefix = '/system/user';
-  
+
   // 权限
   const pagePermission: PagePermission = {
     page: checkPermission(`${permissionPrefix}/search`, permissions),
@@ -78,36 +78,24 @@ function Page() {
     permission: checkPermission(`${permissionPrefix}/systems`, permissions)
   };
 
+  useEffect(() => {
+    if (isFetch) getPage();
+  }, [isFetch])
+
+  // 首次进入自动加载接口数据
+  useEffect(() => {
+    if (pagePermission.page) getPage();
+  }, [pagePermission.page]);
+
   /**
    * 点击搜索
    * @param values - 表单返回数据
    */
   const onSearch = (values: FormData) => {
     setPage(1);
-    handleSearch({ page: 1, pageSize, ...values });
+    setSearchData(values);
+    setFetch(true);
   };
-
-  /**
-   * 搜索提交
-   * @param values - 表单返回数据
-   */
-  const handleSearch = useCallback(async (values: FormData) => {
-    try {
-      setLoading(true);
-      const { code, data } = await getUserPage(values);
-      if (Number(code) !== 200) return;
-      const { items, total } = data;
-      setTotal(total);
-      setTableData(items);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // 首次进入自动加载接口数据
-  useEffect(() => {
-    if (pagePermission.page) handleSearch({ ...initSearch });
-  }, [handleSearch, pagePermission.page]);
 
   /** 开启权限 */
   const openPermission = async (id: string) => {
@@ -125,12 +113,12 @@ function Page() {
       setLoading(false);
     }
   };
-  
+
   /** 关闭权限 */
   const closePermission = () => {
     setPromiseVisible(false);
   };
-  
+
   /**
    * 权限提交
    */
@@ -178,7 +166,7 @@ function Page() {
 
   /** 表格提交 */
   const createSubmit = () => {
-    createFormRef.current?.handleSubmit();
+    createFormRef.current?.submit();
   };
 
   /** 关闭新增/修改弹窗 */
@@ -187,10 +175,19 @@ function Page() {
   };
 
   /** 获取表格数据 */
-  const getPage = () => {
-    const formData = searchFormRef.current?.getFieldsValue() || {};
-    const params = { ...formData, page, pageSize };
-    handleSearch(params);
+  const getPage = async () => {
+    const params = { ...searchData, page, pageSize };
+
+    try {
+      setLoading(true);
+      const { code, data } = await getUserPage(params);
+      if (Number(code) !== 200) return;
+      const { items, total } = data;
+      setTotal(total);
+      setTableData(items);
+    } finally {
+      setLoading(false);
+    }
   };
 
   /**
@@ -236,8 +233,7 @@ function Page() {
   const onChangePagination = (page: number, pageSize: number) => {
     setPage(page);
     setPageSize(pageSize);
-    const formData = searchFormRef.current?.getFieldsValue();
-    handleSearch({ ...formData, page, pageSize });
+    setFetch(true);
   };
 
   /**
@@ -281,7 +277,6 @@ function Page() {
       <>
         { contextHolder }
         <BasicSearch
-          formRef={searchFormRef}
           list={searchList(t)}
           data={initSearch}
           isLoading={isLoading}
@@ -289,7 +284,7 @@ function Page() {
           onCreate={onCreate}
           handleFinish={onSearch}
         />
-        
+
         <BasicTable
           loading={isLoading}
           columns={tableColumns(t, optionRender)}
@@ -312,7 +307,7 @@ function Page() {
           onCancel={closeCreate}
         >
           <BasicForm
-            formRef={createFormRef}
+            ref={createFormRef}
             list={createList(t)}
             data={createData}
             labelCol={{ span: 6 }}
