@@ -28,12 +28,8 @@ export interface SideMenu extends Omit<SubMenuType, 'children' | 'label' | 'icon
   label: string;
   labelEn: string;
   key: string;
-  sortNum?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  menuResource?: string;
   icon?: React.ReactNode | string;
-  permission?: string; // 路由权限
+  rule?: string; // 路由权限
   nav?: string[]; // 面包屑路径
   children?: SideMenu[];
 }
@@ -44,7 +40,7 @@ export interface PagePermission {
   create?: boolean;
   update?: boolean;
   delete?: boolean;
-  [key: string]: boolean;
+  [key: string]: boolean | undefined;
 }
 
 // 表格列数据
