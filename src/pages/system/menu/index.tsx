@@ -131,6 +131,11 @@ function Page() {
     }
   };
 
+  /** 回车处理 */
+  const onPressEnter = () => {
+    form?.submit();
+  };
+
   /** 表单提交 */
   const createSubmit = () => {
     createFormRef.current?.submit();
@@ -314,7 +319,7 @@ function Page() {
                       className={item.hidden ? '!hidden' : ''}
                       valuePropName={handleValuePropName(item.component)}
                     >
-                      { getComponent(t, item) }
+                      { getComponent(t, item, onPressEnter) }
                     </Form.Item>
                   </Col>
                 ))
