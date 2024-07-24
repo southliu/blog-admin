@@ -1,7 +1,7 @@
-import type { FormData, FormList } from '#/form';
+import type { FormData, SearchList } from '#/form';
 import type { ColProps, FormInstance } from 'antd';
 import { type LegacyRef, ReactNode, forwardRef } from 'react';
-import { Button, FormProps } from 'antd';
+import { Button, Col, FormProps, Row } from 'antd';
 import { Form } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
@@ -10,7 +10,7 @@ import { handleValuePropName } from '../Form/utils/helper';
 import { filterDayjs } from '../Dates/utils/helper';
 
 interface Props extends FormProps {
-  list: FormList[];
+  list: SearchList[];
   data: FormData;
   isLoading?: boolean;
   isSearch?: boolean;
@@ -18,6 +18,7 @@ interface Props extends FormProps {
   children?: ReactNode;
   labelCol?: Partial<ColProps>;
   wrapperCol?: Partial<ColProps>;
+  btnColSize?: number;
   onCreate?: () => void;
   handleFinish: FormProps['onFinish'];
 }
@@ -32,6 +33,7 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
     children,
     labelCol,
     wrapperCol,
+    btnColSize,
     handleFinish
   } = props;
   const { t } = useTranslation();
@@ -89,55 +91,60 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        {
-          list?.map(item => (
-            <Form.Item
-              key={`${item.name}`}
-              label={item.label}
-              name={item.name}
-              className='!mb-5px'
-              labelCol={{ style: { width: item.labelCol } }}
-              wrapperCol={{ style: { width: item.wrapperCol } }}
-              rules={item.rules}
-              valuePropName={handleValuePropName(item.component)}
-            >
-              { getComponent(t, item, onPressEnter) }
-            </Form.Item>
-          ))
-        }
-
-        <div className='flex items-center flex-wrap'>
+        <Row>
           {
-            isSearch !== false &&
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className='!mb-5px'
-                loading={isLoading}
-                icon={<SearchOutlined />}
-              >
-                { t('public.search') }
-              </Button>
-            </Form.Item>
+            list?.map(item => (
+              <Col key={`${item.name}`} span={item.colSize ?? 6}>
+                <Form.Item
+                  label={item.label}
+                  name={item.name}
+                  className='!mb-5px'
+                  labelCol={{ style: { width: item.labelCol } }}
+                  wrapperCol={{ style: { width: item.wrapperCol } }}
+                  rules={item.rules}
+                  valuePropName={handleValuePropName(item.component)}
+                >
+                  { getComponent(t, item, onPressEnter) }
+                </Form.Item>
+              </Col>
+            ))
           }
 
-          {
-            isCreate !== false &&
-            <Form.Item>
-              <Button
-                type="primary"
-                className='!mb-5px'
-                icon={<PlusOutlined />}
-                onClick={onCreate}
-              >
-                { t('public.create') }
-              </Button>
-            </Form.Item>
-          }
+          <Col span={btnColSize} flex='auto'>
+            <div className='flex items-center flex-wrap'>
+              {
+                isSearch !== false &&
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className='!mb-5px'
+                    loading={isLoading}
+                    icon={<SearchOutlined />}
+                  >
+                    { t('public.search') }
+                  </Button>
+                </Form.Item>
+              }
 
-          { children }
-        </div>
+              {
+                isCreate !== false &&
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    className='!mb-5px'
+                    icon={<PlusOutlined />}
+                    onClick={onCreate}
+                  >
+                    { t('public.create') }
+                  </Button>
+                </Form.Item>
+              }
+
+              { children }
+            </div>
+          </Col>
+        </Row>
       </Form>
     </div>
   );
