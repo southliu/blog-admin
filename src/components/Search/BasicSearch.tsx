@@ -14,6 +14,7 @@ interface Props extends FormProps {
   data: FormData;
   isLoading?: boolean;
   isSearch?: boolean;
+  isClear?: boolean;
   isCreate?: boolean;
   children?: ReactNode;
   labelCol?: Partial<ColProps>;
@@ -29,8 +30,9 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
     list,
     data,
     isLoading,
-    isSearch,
-    isCreate,
+    isSearch = true,
+    isClear = true,
+    isCreate = true,
     children,
     labelCol,
     wrapperCol,
@@ -64,7 +66,7 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
     if (!list?.length) return 6;
     const columnNum = Math.floor(list?.length % defaultColCount);
     const lastNum = defaultColCount - columnNum;
-    const result = (defaultColCount - lastNum) * 6;
+    const result = 24 - (defaultColCount - lastNum) * 6;
     return result || 24;
   }
 
@@ -126,7 +128,7 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
             <Flex justify='flex-end'>
               <div className='flex items-center flex-wrap'>
                 {
-                  isSearch !== false &&
+                  !!isSearch &&
                   <Form.Item>
                     <Button
                       type="primary"
@@ -141,7 +143,20 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
                 }
 
                 {
-                  isCreate !== false &&
+                  !!isClear &&
+                  <Form.Item>
+                    <Button
+                      className='!mb-5px'
+                      icon={<PlusOutlined />}
+                      onClick={onCreate}
+                    >
+                      { t('public.clear') }
+                    </Button>
+                  </Form.Item>
+                }
+
+                {
+                  !!isCreate &&
                   <Form.Item>
                     <Button
                       type="primary"
