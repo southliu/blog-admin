@@ -4,7 +4,7 @@ import { type LegacyRef, ReactNode, forwardRef } from 'react';
 import { Button, Col, Flex, FormProps, Row } from 'antd';
 import { Form } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
+import { SearchOutlined, PlusOutlined, ClearOutlined } from '@ant-design/icons';
 import { getComponent } from '../Form/utils/componentMap';
 import { handleValuePropName } from '../Form/utils/helper';
 import { filterDayjs } from '../Dates/utils/helper';
@@ -61,6 +61,13 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
     props.onCreate?.();
   };
 
+  /** 点击清除 */
+  const onClear = () => {
+    form?.resetFields();
+    form?.setFieldsValue(data ? { ...data } : {});
+    form?.submit();
+  };
+
   /** 计算按钮剩余空间 */
   const getBtnColSize = () => {
     if (!list?.length) return 6;
@@ -68,8 +75,7 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
     const lastNum = defaultColCount - columnNum;
     const result = 24 - (defaultColCount - lastNum) * 6;
     return result || 24;
-  }
-
+  };
 
   /**
    * 提交表单
@@ -147,8 +153,8 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
                   <Form.Item>
                     <Button
                       className='!mb-5px'
-                      icon={<PlusOutlined />}
-                      onClick={onCreate}
+                      icon={<ClearOutlined />}
+                      onClick={onClear}
                     >
                       { t('public.clear') }
                     </Button>
