@@ -1,10 +1,9 @@
 import type { FormData } from '#/form';
 import type { AppDispatch, RootState } from '@/stores';
 import type { PagePermission, TableOptions } from '#/public';
-import type { FormFn } from '@/components/Form/BasicForm';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { searchList, tableColumns } from './model';
-import { message } from 'antd';
+import { type FormInstance, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +32,7 @@ function Page() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
-  const searchFormRef = useRef<FormFn>(null);
+  const searchFormRef = useRef<FormInstance>(null);
   const { permissions } = useCommonStore();
   const [isLoading, setLoading] = useState(false);
   const [page, setPage] = useState(initSearch.page);
@@ -83,13 +82,13 @@ function Page() {
   }, []);
 
   // 首次进入自动加载接口数据
-  useEffect(() => { 
+  useEffect(() => {
     if (pagePermission.page && !isRefreshPage) handleSearch({ ...initSearch });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagePermission.page]);
 
   // 如果是新增或编辑成功重新加载页面
-  useEffect(() => { 
+  useEffect(() => {
     if (isRefreshPage) {
       dispatch(setRefreshPage(false));
       getPage();
@@ -177,15 +176,13 @@ function Page() {
       <>
         { contextHolder }
         <BasicSearch
-          formRef={searchFormRef}
+          ref={searchFormRef}
           list={searchList(t)}
           data={initSearch}
           isLoading={isLoading}
-          isCreate={pagePermission.create}
-          onCreate={onCreate}
           handleFinish={onSearch}
         />
-        
+
         <BasicTable
           loading={isLoading}
           columns={tableColumns(t, optionRender)}

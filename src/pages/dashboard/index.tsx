@@ -51,7 +51,6 @@ function Dashboard() {
           list={searchList(t)}
           data={initSearch}
           isLoading={isLoading}
-          isCreate={false}
           handleFinish={handleSearch}
         />
 

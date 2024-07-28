@@ -276,8 +276,6 @@ function Page() {
           list={searchList(t)}
           data={initSearch}
           isLoading={isLoading}
-          isCreate={pagePermission.create}
-          onCreate={onCreate}
           handleFinish={onSearch}
         >
           <FilterButton
