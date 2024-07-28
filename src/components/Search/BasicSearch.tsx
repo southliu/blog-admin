@@ -4,7 +4,7 @@ import { type LegacyRef, ReactNode, forwardRef } from 'react';
 import { Button, Col, Flex, FormProps, Row } from 'antd';
 import { Form } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { SearchOutlined, PlusOutlined, ClearOutlined } from '@ant-design/icons';
+import { SearchOutlined, ClearOutlined } from '@ant-design/icons';
 import { getComponent } from '../Form/utils/componentMap';
 import { handleValuePropName } from '../Form/utils/helper';
 import { filterDayjs } from '../Dates/utils/helper';
@@ -15,13 +15,11 @@ interface Props extends FormProps {
   isLoading?: boolean;
   isSearch?: boolean;
   isClear?: boolean;
-  isCreate?: boolean;
   children?: ReactNode;
   labelCol?: Partial<ColProps>;
   wrapperCol?: Partial<ColProps>;
   btnColSize?: number; // 按钮占用空间
   defaultColCount?: number; // 默认每项占位几个，默认一行四个
-  onCreate?: () => void;
   handleFinish: FormProps['onFinish'];
 }
 
@@ -32,7 +30,6 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
     isLoading,
     isSearch = true,
     isClear = true,
-    isCreate = true,
     children,
     labelCol,
     wrapperCol,
@@ -46,19 +43,13 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
   // 清除多余参数
   const formProps = { ...props };
   delete formProps.isSearch;
-  delete formProps.isCreate;
+  delete formProps.isClear;
   delete formProps.isLoading;
-  delete formProps.onCreate;
   delete formProps.handleFinish;
 
   /** 回车处理 */
   const onPressEnter = () => {
     form?.submit();
-  };
-
-  /** 点击新增 */
-  const onCreate = () => {
-    props.onCreate?.();
   };
 
   /** 点击清除 */
@@ -157,20 +148,6 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
                       onClick={onClear}
                     >
                       { t('public.clear') }
-                    </Button>
-                  </Form.Item>
-                }
-
-                {
-                  !!isCreate &&
-                  <Form.Item>
-                    <Button
-                      type="primary"
-                      className='!mb-5px'
-                      icon={<PlusOutlined />}
-                      onClick={onCreate}
-                    >
-                      { t('public.create') }
                     </Button>
                   </Form.Item>
                 }
