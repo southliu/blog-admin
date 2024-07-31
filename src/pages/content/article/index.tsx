@@ -173,30 +173,28 @@ function Page() {
 
   return (
     <BasicContent isPermission={pagePermission.page}>
-      <>
-        { contextHolder }
-        <BasicSearch
-          ref={searchFormRef}
-          list={searchList(t)}
-          data={initSearch}
-          isLoading={isLoading}
-          handleFinish={onSearch}
-        />
+      { contextHolder }
+      <BasicSearch
+        ref={searchFormRef}
+        list={searchList(t)}
+        data={initSearch}
+        isLoading={isLoading}
+        handleFinish={onSearch}
+      />
 
-        <BasicTable
-          loading={isLoading}
-          columns={tableColumns(t, optionRender)}
-          dataSource={tableData}
-        />
+      <BasicTable
+        loading={isLoading}
+        columns={tableColumns(t, optionRender)}
+        dataSource={tableData}
+      />
 
-        <BasicPagination
-          disabled={isLoading}
-          current={page}
-          pageSize={pageSize}
-          total={total}
-          onChange={onChangePagination}
-        />
-      </>
+      <BasicPagination
+        disabled={isLoading}
+        current={page}
+        pageSize={pageSize}
+        total={total}
+        onChange={onChangePagination}
+      />
     </BasicContent>
   );
 }

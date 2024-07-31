@@ -274,53 +274,51 @@ function Page() {
 
   return (
     <BasicContent isPermission={pagePermission.page}>
-      <>
-        { contextHolder }
-        <BasicSearch
-          list={searchList(t)}
-          data={initSearch}
-          isLoading={isLoading}
-          handleFinish={onSearch}
-        />
+      { contextHolder }
+      <BasicSearch
+        list={searchList(t)}
+        data={initSearch}
+        isLoading={isLoading}
+        handleFinish={onSearch}
+      />
 
-        <BasicTable
-          loading={isLoading}
-          columns={tableColumns(t, optionRender)}
-          dataSource={tableData}
-        />
+      <BasicTable
+        loading={isLoading}
+        columns={tableColumns(t, optionRender)}
+        dataSource={tableData}
+      />
 
-        <BasicPagination
-          disabled={isLoading}
-          current={page}
-          pageSize={pageSize}
-          total={total}
-          onChange={onChangePagination}
-        />
+      <BasicPagination
+        disabled={isLoading}
+        current={page}
+        pageSize={pageSize}
+        total={total}
+        onChange={onChangePagination}
+      />
 
-        <BasicModal
-          title={createTitle}
-          open={isCreateOpen}
-          confirmLoading={isCreateLoading}
-          onOk={createSubmit}
-          onCancel={closeCreate}
-        >
-          <BasicForm
-            ref={createFormRef}
-            list={createList(t)}
-            data={createData}
-            labelCol={{ span: 6 }}
-            handleFinish={handleCreate}
-          />
-        </BasicModal>
-
-        <PermissionDrawer
-          isVisible={isPromiseVisible}
-          treeData={promiseTreeData}
-          checkedKeys={promiseCheckedKeys}
-          onClose={closePermission}
-          onSubmit={permissionSubmit}
+      <BasicModal
+        title={createTitle}
+        open={isCreateOpen}
+        confirmLoading={isCreateLoading}
+        onOk={createSubmit}
+        onCancel={closeCreate}
+      >
+        <BasicForm
+          ref={createFormRef}
+          list={createList(t)}
+          data={createData}
+          labelCol={{ span: 6 }}
+          handleFinish={handleCreate}
         />
-      </>
+      </BasicModal>
+
+      <PermissionDrawer
+        isVisible={isPromiseVisible}
+        treeData={promiseTreeData}
+        checkedKeys={promiseCheckedKeys}
+        onClose={closePermission}
+        onSubmit={permissionSubmit}
+      />
     </BasicContent>
   );
 }
