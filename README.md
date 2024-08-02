@@ -1,31 +1,19 @@
 <div align="center">
-	<h1>South Admin</h1>
+	<h1>Blog Admin</h1>
 </div>
-
-[![license](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE) ![](https://img.shields.io/github/stars/southliu/south-admin)
-
-## ✨ 简介
-
-使用`React18`,`Typescript`,`Vite`,`Antd5.0`等主流技术开发的开箱即用的中后台前端项目，`Vite`实现自动生成路由，支持`KeepAlive`功能，`react-redux`状态管理，支持虚拟滚动表格，`UnoCss`开发样式。
-
-## 🚀 项目演示
-[演示地址](https://southliu.github.io/)<br>
-[国内访问](https://southliu.gitee.io)
-
-![image](https://github.com/southliu/react-admin/assets/26358837/5e7e59a8-d836-46ef-ac41-0d2c5de63e6e)
 
 ## 💻 安装使用
 
 - 获取项目代码
 
 ```bash
-git clone https://github.com/southliu/react-admin.git
+git clone https://github.com/southliu/blog-admin.git
 ```
 
 - 选择目录
 
 ```bash
-cd react-admin
+cd blog-admin
 ```
 
 - 安装全局依赖依赖，存在则不用安装
