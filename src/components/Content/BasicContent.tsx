@@ -14,13 +14,7 @@ function BasicContent(props: Props) {
         isPermission !== false &&
         <div
           id="content"
-          className={`
-            relative
-            box-border
-            px-5
-            py-3
-            rounded-5
-          `}
+          className="p-10px"
         >
             { children }
         </div>
