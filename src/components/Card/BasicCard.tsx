@@ -1,14 +1,27 @@
+import { HTMLAttributes } from "react";
 
-interface Props {
-  children: JSX.Element | JSX.Element[];
+interface Props extends HTMLAttributes<unknown> {
 }
 
 function BasicCard(props: Props) {
-  const { children } = props;
+  const { children, className } = props;
 
   return (
     <div
-      className="min-w-980px h-full p-10px box-border overflow-auto"
+      { ...props }
+      id="card"
+      className={`
+        min-w-980px
+        h-full
+        box-border
+        overflow-auto
+        relative
+        box-border
+        px-5
+        py-3
+        rounded-5
+        ${className}
+      `}
     >
       { children }
     </div>

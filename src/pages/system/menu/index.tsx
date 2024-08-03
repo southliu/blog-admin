@@ -25,6 +25,7 @@ import { Icon } from '@iconify/react';
 import { API_METHODS } from '@/utils/constants';
 import { useFiler } from '@/components/TableFilter/hooks/useFiler';
 import FilterButton from '@/components/TableFilter';
+import BasicCard from '@/components/Card/BasicCard';
 
 // 当前行数据
 interface RowData {
@@ -271,110 +272,114 @@ function Page() {
   return (
     <BasicContent isPermission={pagePermission.page}>
       { contextHolder }
-      <BasicSearch
-        list={searchList(t)}
-        data={initSearch}
-        isLoading={isLoading}
-        handleFinish={onSearch}
-      >
-        <FilterButton
-          columns={columns}
-          className='!mb-5px'
-          getTableChecks={getTableChecks}
-        />
-      </BasicSearch>
-
-      <BasicTable
-        loading={isLoading}
-        columns={handleFilterTable(columns, tableFilters)}
-        dataSource={tableData}
-      />
-
-      <BasicModal
-        width={800}
-        title={createTitle}
-        open={isCreateOpen}
-        confirmLoading={isCreateLoading}
-        onOk={createSubmit}
-        onCancel={closeCreate}
-      >
-        <Form
-          form={form}
-          labelCol={{ span: 4 }}
-          onFinish={handleCreate}
+      <BasicCard>
+        <BasicSearch
+          list={searchList(t)}
+          data={initSearch}
+          isLoading={isLoading}
+          handleFinish={onSearch}
         >
-          <Row gutter={24}>
+          <FilterButton
+            columns={columns}
+            className='!mb-5px'
+            getTableChecks={getTableChecks}
+          />
+        </BasicSearch>
+      </BasicCard>
+
+      <BasicCard className='mt-10px'>
+        <BasicTable
+          loading={isLoading}
+          columns={handleFilterTable(columns, tableFilters)}
+          dataSource={tableData}
+        />
+
+        <BasicModal
+          width={800}
+          title={createTitle}
+          open={isCreateOpen}
+          confirmLoading={isCreateLoading}
+          onOk={createSubmit}
+          onCancel={closeCreate}
+        >
+          <Form
+            form={form}
+            labelCol={{ span: 4 }}
+            onFinish={handleCreate}
+          >
+            <Row gutter={24}>
+              {
+                createList(t)?.map(item => (
+                  <Col span={12} key={String(item.name)}>
+                    <Form.Item
+                      {...filterFormItem(item)}
+                      key={`${item.name}`}
+                      label={item.label}
+                      name={item.name}
+                      rules={!item.hidden ? item.rules : []}
+                      className={item.hidden ? '!hidden' : ''}
+                      valuePropName={handleValuePropName(item.component)}
+                    >
+                      { getComponent(t, item, onPressEnter) }
+                    </Form.Item>
+                  </Col>
+                ))
+              }
+            </Row>
+            <div className='font-bold'>API接口权限：</div>
+            <Row className='mb-5px'>
+              <Col flex='150px' className='font-bold mr-10px'>
+                方法
+              </Col>
+              <Col flex={8} className='font-bold'>
+                路径
+              </Col>
+            </Row>
             {
-              createList(t)?.map(item => (
-                <Col span={12} key={String(item.name)}>
-                  <Form.Item
-                    {...filterFormItem(item)}
-                    key={`${item.name}`}
-                    label={item.label}
-                    name={item.name}
-                    rules={!item.hidden ? item.rules : []}
-                    className={item.hidden ? '!hidden' : ''}
-                    valuePropName={handleValuePropName(item.component)}
-                  >
-                    { getComponent(t, item, onPressEnter) }
-                  </Form.Item>
-                </Col>
+              apiMethods?.map((item, index) => (
+                <Row key={index} className='mb-15px'>
+                  <Col flex='150px' className='mr-10px'>
+                    <Select
+                      value={item.method}
+                      className='w-150px'
+                      placeholder={t('public.inputPleaseSelect')}
+                      options={API_METHODS}
+                      onChange={value => handleChangeItemApi(value, index, 'method')}
+                    />
+                  </Col>
+                  <Col flex={8}>
+                    <Input
+                      value={item.path}
+                      placeholder={t('public.inputPleaseEnter')}
+                      onChange={e => handleChangeItemApi(e.target.value, index, 'path')}
+                    />
+                  </Col>
+                  <Col flex={1}>
+                    <div
+                      className='h-full flex items-center justify-center cursor-pointer'
+                      onClick={() => handleDeleteApiMethod(index)}
+                    >
+                      <Icon
+                        icon='material-symbols:delete-outline'
+                        className='text-18px'
+                      />
+                    </div>
+                  </Col>
+                </Row>
               ))
             }
-          </Row>
-          <div className='font-bold'>API接口权限：</div>
-          <Row className='mb-5px'>
-            <Col flex='150px' className='font-bold mr-10px'>
-              方法
-            </Col>
-            <Col flex={8} className='font-bold'>
-              路径
-            </Col>
-          </Row>
-          {
-            apiMethods?.map((item, index) => (
-              <Row key={index} className='mb-15px'>
-                <Col flex='150px' className='mr-10px'>
-                  <Select
-                    value={item.method}
-                    className='w-150px'
-                    placeholder={t('public.inputPleaseSelect')}
-                    options={API_METHODS}
-                    onChange={value => handleChangeItemApi(value, index, 'method')}
-                  />
-                </Col>
-                <Col flex={8}>
-                  <Input
-                    value={item.path}
-                    placeholder={t('public.inputPleaseEnter')}
-                    onChange={e => handleChangeItemApi(e.target.value, index, 'path')}
-                  />
-                </Col>
-                <Col flex={1}>
-                  <div
-                    className='h-full flex items-center justify-center cursor-pointer'
-                    onClick={() => handleDeleteApiMethod(index)}
-                  >
-                    <Icon
-                      icon='material-symbols:delete-outline'
-                      className='text-18px'
-                    />
-                  </div>
-                </Col>
-              </Row>
-            ))
-          }
-          <Button
-            className='w-full mt-5px'
-            type="dashed"
-            block
-            onClick={handleAddApiMethod}
-          >
-            <Icon icon='material-symbols:add' />
-            <span>新增</span>
-          </Button>
-        </Form>
-      </BasicModal>
+            <Button
+              className='w-full mt-5px'
+              type="dashed"
+              block
+              onClick={handleAddApiMethod}
+            >
+              <Icon icon='material-symbols:add' />
+              <span>新增</span>
+            </Button>
+          </Form>
+        </BasicModal>
+      </BasicCard>
     </BasicContent>
   );
 }
