@@ -1,10 +1,10 @@
 import type { FormData, SearchList } from '#/form';
 import type { ColProps, FormInstance } from 'antd';
-import { type LegacyRef, ReactNode, forwardRef } from 'react';
+import { type LegacyRef, ReactNode, forwardRef, useState } from 'react';
 import { Button, Col, Flex, FormProps, Row } from 'antd';
 import { Form } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { SearchOutlined, ClearOutlined } from '@ant-design/icons';
+import { SearchOutlined, ClearOutlined, DownOutlined } from '@ant-design/icons';
 import { getComponent } from '../Form/utils/componentMap';
 import { handleValuePropName } from '../Form/utils/helper';
 import { filterDayjs } from '../Dates/utils/helper';
@@ -19,7 +19,9 @@ interface Props extends FormProps {
   labelCol?: Partial<ColProps>;
   wrapperCol?: Partial<ColProps>;
   btnColSize?: number; // 按钮占用空间
+  isRowExpand?: boolean; // 是否显示收缩搜索功能
   defaultColCount?: number; // 默认每项占位几个，默认一行四个
+  defaultRowExpand?: number; // 默认展示多少行
   handleFinish: FormProps['onFinish'];
 }
 
@@ -30,15 +32,18 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
     isLoading,
     isSearch = true,
     isClear = true,
+    isRowExpand = true,
     children,
     labelCol,
     wrapperCol,
     btnColSize,
     defaultColCount = 4,
+    defaultRowExpand = 2,
     handleFinish
   } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const [isExpand, setExpand] = useState(false);
 
   // 清除多余参数
   const formProps = { ...props };
@@ -58,6 +63,30 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
     form?.setFieldsValue(data ? { ...data } : {});
     form?.submit();
   };
+
+  /**
+   * 处理列表
+   * @param list - 列表
+   */
+  const filterList = (list: SearchList[]) => {
+    if (!isRowExpand) return list;
+
+    // 默认显示个数
+    const showNum = defaultColCount * defaultRowExpand;
+
+    for (let i = 0; i < list.length; i++) {
+      const item = list[i];
+
+      if (i < showNum) {
+        item.hidden = false;
+        continue
+      }
+
+      item.hidden = !isExpand;
+    }
+
+    return list;
+  }
 
   /** 计算按钮剩余空间 */
   const getBtnColSize = () => {
@@ -89,7 +118,7 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
   };
 
   return (
-    <div id="searches" className="py-3">
+    <div id="searches">
       <Form
         layout="inline"
         {...formProps}
@@ -104,12 +133,13 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
       >
         <Row>
           {
-            list?.map(item => (
+            filterList(list)?.map(item => (
               <Col key={`${item.name}`} span={item.colSize ?? Math.floor(24 / defaultColCount)}>
                 <Form.Item
                   label={item.label}
                   name={item.name}
                   className='!mb-5px'
+                  hidden={item.hidden}
                   labelCol={{ style: { width: item.labelCol } }}
                   wrapperCol={{ style: { width: item.wrapperCol } }}
                   rules={item.rules}
@@ -153,6 +183,19 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
                 }
 
                 { children }
+
+                {
+                  !!isRowExpand &&
+                  <div
+                    className='text-12px cursor-pointer color-#1677ff hover:color-#69b1ff'
+                    onClick={() => {
+                      setExpand(!isExpand);
+                    }}
+                  >
+                    <DownOutlined rotate={ isExpand ? 180 : 0 } />
+                    { isExpand ? '收缩' : '展开' }
+                  </div>
+                }
               </div>
             </Flex>
           </Col>

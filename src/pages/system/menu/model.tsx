@@ -40,6 +40,86 @@ export const searchList = (t: TFunction): FormList[] => [
       options: MENU_TYPES
     }
   },
+  {
+    label: t('public.name'),
+    name: 'label',
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  },
+  {
+    label: t('public.name'),
+    name: 'label',
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  },
+  {
+    label: t('public.name'),
+    name: 'label',
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  },
+  {
+    label: t('public.name'),
+    name: 'label',
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  },
+  {
+    label: t('public.name'),
+    name: 'label',
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  },
+  {
+    label: t('public.name'),
+    name: 'label',
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  },
+  {
+    label: t('public.name'),
+    name: 'label',
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  },
+  {
+    label: t('public.name'),
+    name: 'label',
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  },
+  {
+    label: t('public.name'),
+    name: 'label',
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  },
+  {
+    label: t('public.name'),
+    name: 'label',
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  },
 ];
 
 /**
