@@ -278,16 +278,15 @@ function Page() {
           data={initSearch}
           isLoading={isLoading}
           handleFinish={onSearch}
-        >
-          <FilterButton
-            columns={columns}
-            className='!mb-5px'
-            getTableChecks={getTableChecks}
-          />
-        </BasicSearch>
+        />
       </BasicCard>
 
       <BasicCard className='mt-10px'>
+        <FilterButton
+          columns={columns}
+          className='!mb-5px'
+          getTableChecks={getTableChecks}
+        />
         <BasicTable
           loading={isLoading}
           columns={handleFilterTable(columns, tableFilters)}
