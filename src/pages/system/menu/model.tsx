@@ -12,6 +12,19 @@ export interface APIMethodData {
   path?: string;
 }
 
+const otherList: FormList[] = [];
+
+for (let i = 0; i < 30; i++) {
+  otherList.push({
+    label: `名称${i}`,
+    name: `label${i}`,
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  })
+}
+
 // 搜索数据
 export const searchList = (t: TFunction): FormList[] => [
   {
@@ -40,86 +53,7 @@ export const searchList = (t: TFunction): FormList[] => [
       options: MENU_TYPES
     }
   },
-  {
-    label: t('public.name'),
-    name: 'label',
-    component: 'Input',
-    componentProps: {
-      maxLength: 200
-    }
-  },
-  {
-    label: t('public.name'),
-    name: 'label',
-    component: 'Input',
-    componentProps: {
-      maxLength: 200
-    }
-  },
-  {
-    label: t('public.name'),
-    name: 'label',
-    component: 'Input',
-    componentProps: {
-      maxLength: 200
-    }
-  },
-  {
-    label: t('public.name'),
-    name: 'label',
-    component: 'Input',
-    componentProps: {
-      maxLength: 200
-    }
-  },
-  {
-    label: t('public.name'),
-    name: 'label',
-    component: 'Input',
-    componentProps: {
-      maxLength: 200
-    }
-  },
-  {
-    label: t('public.name'),
-    name: 'label',
-    component: 'Input',
-    componentProps: {
-      maxLength: 200
-    }
-  },
-  {
-    label: t('public.name'),
-    name: 'label',
-    component: 'Input',
-    componentProps: {
-      maxLength: 200
-    }
-  },
-  {
-    label: t('public.name'),
-    name: 'label',
-    component: 'Input',
-    componentProps: {
-      maxLength: 200
-    }
-  },
-  {
-    label: t('public.name'),
-    name: 'label',
-    component: 'Input',
-    componentProps: {
-      maxLength: 200
-    }
-  },
-  {
-    label: t('public.name'),
-    name: 'label',
-    component: 'Input',
-    componentProps: {
-      maxLength: 200
-    }
-  },
+  ...otherList,
 ];
 
 /**
