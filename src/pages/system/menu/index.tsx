@@ -34,6 +34,7 @@ interface RowData {
 
 // 初始化搜索数据
 const initSearch = {
+  label20: '213'
 };
 
 // 初始化新增数据
@@ -53,7 +54,7 @@ function Page() {
   const [createTitle, setCreateTitle] = useState(ADD_TITLE(t));
   const [createId, setCreateId] = useState('');
   const [createData, setCreateData] = useState<FormData>(initCreate);
-  const [searchData, setSearchData] = useState<FormData>({});
+  const [searchData, setSearchData] = useState<FormData>({ ...initSearch });
   const [tableData, setTableData] = useState<FormData[]>([]);
   const [apiMethods, setApiMethods] = useState<APIMethodData[]>([{}]);
   const [tableFilters, setTableFilters] = useState<string[]>([]);

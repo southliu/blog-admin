@@ -123,28 +123,23 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
         <Flex wrap className='w-full'>
           {
             filterList(list)?.map(item => (
-              <>
-                {
-                  !item.hidden &&
-                  <div
-                    key={`${item.name}`}
-                    style={{ width: `${100 / defaultColCount}%` }}
-                  >
-                    <Form.Item
-                      label={item.label}
-                      name={item.name}
-                      className='!mb-5px'
-                      hidden={item.hidden}
-                      labelCol={{ style: { width: item.labelCol } }}
-                      wrapperCol={{ style: { width: item.wrapperCol } }}
-                      rules={item.rules}
-                      valuePropName={handleValuePropName(item.component)}
-                    >
-                      { getComponent(t, item, onPressEnter) }
-                    </Form.Item>
-                  </div>
-                }
-              </>
+              <div
+                key={`${item.name}`}
+                style={{ width: item.hidden ? 0 : `${100 / defaultColCount}%` }}
+              >
+                <Form.Item
+                  label={item.label}
+                  name={item.name}
+                  className='!mb-5px'
+                  hidden={item.hidden}
+                  labelCol={{ style: { width: item.labelCol } }}
+                  wrapperCol={{ style: { width: item.wrapperCol } }}
+                  rules={item.rules}
+                  valuePropName={handleValuePropName(item.component)}
+                >
+                  { getComponent(t, item, onPressEnter) }
+                </Form.Item>
+              </div>
             ))
           }
 
