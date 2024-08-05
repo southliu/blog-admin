@@ -1,7 +1,7 @@
 import type { FormData, SearchList } from '#/form';
 import type { ColProps, FormInstance } from 'antd';
 import { type LegacyRef, ReactNode, forwardRef, useState } from 'react';
-import { Button, Col, Flex, FormProps, Row } from 'antd';
+import { type FormProps, Button, Col, Flex } from 'antd';
 import { Form } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { SearchOutlined, ClearOutlined, DownOutlined } from '@ant-design/icons';
@@ -18,7 +18,6 @@ interface Props extends FormProps {
   children?: ReactNode;
   labelCol?: Partial<ColProps>;
   wrapperCol?: Partial<ColProps>;
-  btnColSize?: number; // 按钮占用空间
   isRowExpand?: boolean; // 是否显示收缩搜索功能
   defaultColCount?: number; // 默认每项占位几个，默认一行四个
   defaultRowExpand?: number; // 默认展示多少行
@@ -36,7 +35,6 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
     children,
     labelCol,
     wrapperCol,
-    btnColSize,
     defaultColCount = 4,
     defaultRowExpand = 2,
     handleFinish
@@ -86,15 +84,6 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
     }
 
     return list;
-  }
-
-  /** 计算按钮剩余空间 */
-  const getBtnColSize = () => {
-    if (!list?.length) return 6;
-    const columnNum = Math.floor(list?.length % defaultColCount);
-    const lastNum = defaultColCount - columnNum;
-    const result = 24 - (defaultColCount - lastNum) * 6;
-    return result || 24;
   };
 
   /**
@@ -131,27 +120,35 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Row>
+        <Flex wrap className='w-full'>
           {
             filterList(list)?.map(item => (
-              <Col key={`${item.name}`} span={item.colSize ?? Math.floor(24 / defaultColCount)}>
-                <Form.Item
-                  label={item.label}
-                  name={item.name}
-                  className='!mb-5px'
-                  hidden={item.hidden}
-                  labelCol={{ style: { width: item.labelCol } }}
-                  wrapperCol={{ style: { width: item.wrapperCol } }}
-                  rules={item.rules}
-                  valuePropName={handleValuePropName(item.component)}
-                >
-                  { getComponent(t, item, onPressEnter) }
-                </Form.Item>
-              </Col>
+              <>
+                {
+                  !item.hidden &&
+                  <div
+                    key={`${item.name}`}
+                    style={{ width: `${100 / defaultColCount}%` }}
+                  >
+                    <Form.Item
+                      label={item.label}
+                      name={item.name}
+                      className='!mb-5px'
+                      hidden={item.hidden}
+                      labelCol={{ style: { width: item.labelCol } }}
+                      wrapperCol={{ style: { width: item.wrapperCol } }}
+                      rules={item.rules}
+                      valuePropName={handleValuePropName(item.component)}
+                    >
+                      { getComponent(t, item, onPressEnter) }
+                    </Form.Item>
+                  </div>
+                }
+              </>
             ))
           }
 
-          <Col span={btnColSize ?? getBtnColSize()}>
+          <Col flex='auto'>
             <Flex justify='flex-end'>
               <div className='flex items-center flex-wrap'>
                 {
@@ -199,7 +196,7 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
               </div>
             </Flex>
           </Col>
-        </Row>
+        </Flex>
       </Form>
     </div>
   );
