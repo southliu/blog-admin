@@ -1,11 +1,12 @@
 import type { ResizeCallbackData } from 'react-resizable';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
-import type { TableProps } from 'antd';
+import { type TableProps, Table, Skeleton } from 'antd';
+import { useFiler } from './hooks/useFiler';
 import { useMemo, useState, useEffect, useRef } from 'react';
-import { Table, Skeleton } from 'antd';
 import { getTableHeight, handleRowHeight, filterTableColumns } from './utils/helper';
 import ResizableTitle from './components/ResizableTitle';
 import useVirtualTable from './hooks/useVirtual';
+import FilterButton from './components/TableFilter';
 
 type Components = TableProps<object>['components']
 
@@ -13,6 +14,7 @@ interface Props extends Omit<TableProps<object>, 'bordered'> {
   isBordered?: boolean; // 是否开启边框
   isZebra?: boolean; // 是否开启斑马线
   isVirtual?: boolean; // 是否开启虚拟滚动
+  isOperate?: boolean; // 是否开启顶部操作栏
   scrollX?: number;
   scrollY?: number;
 }
@@ -20,16 +22,19 @@ interface Props extends Omit<TableProps<object>, 'bordered'> {
 function BasicTable(props: Props) {
   const {
     loading,
-    isZebra,
-    isBordered,
     isVirtual,
+    isZebra = true,
+    isBordered = true,
+    isOperate = true,
     scrollX,
     scrollY,
     rowClassName,
     size
   } = props;
+  const [handleFilterTable] = useFiler();
   const [columns, setColumns] = useState(filterTableColumns(props.columns as ColumnsType<object>));
   const tableRef = useRef<HTMLDivElement>(null);
+  const [tableFilters, setTableFilters] = useState<string[]>([]);
 
   useEffect(() => {
     setColumns(filterTableColumns(props.columns as ColumnsType<object>));
@@ -37,6 +42,14 @@ function BasicTable(props: Props) {
 
   // 表格高度
   const tableHeight = getTableHeight(tableRef.current);
+
+  /**
+   * 获取勾选表格数据
+   * @param checks - 勾选
+   */
+  const getTableChecks = (checks: string[]) => {
+    setTableFilters(checks);
+  };
 
   /**
    * 处理拖拽
@@ -54,13 +67,17 @@ function BasicTable(props: Props) {
   };
 
   // 合并列表
-  const mergeColumns = columns.map((col, index) => ({
-    ...col,
-    onHeaderCell: (column: ColumnType<object>) => ({
-      width: column.width,
-      onResize: handleResize(index),
-    }),
-  }));
+  const mergeColumns = () => {
+    const result = columns.map((col, index) => ({
+      ...col,
+      onHeaderCell: (column: ColumnType<object>) => ({
+        width: column.width,
+        onResize: handleResize(index),
+      }),
+    }));
+
+    return handleFilterTable(result, tableFilters);
+  };
 
   // 虚拟滚动操作值
   const virtualOptions = useVirtualTable({
@@ -82,7 +99,7 @@ function BasicTable(props: Props) {
   }, [virtualOptions]);
 
   // 只带拖拽功能组件
-  const components: Components = isVirtual === true ? virtualComponents : {
+  const components: Components = !!isVirtual ? virtualComponents : {
     header: {
       cell: ResizableTitle,
     }
@@ -115,6 +132,16 @@ function BasicTable(props: Props) {
       `}
     >
       {
+        isOperate &&
+        <div>
+          <FilterButton
+            columns={columns}
+            className='!mb-5px'
+            getTableChecks={getTableChecks}
+          />
+        </div>
+      }
+      {
         !tableHeight &&
         <Skeleton />
       }
@@ -138,7 +165,7 @@ function BasicTable(props: Props) {
             bordered={isBordered !== false}
             scroll={scroll}
             components={components}
-            columns={mergeColumns as ColumnsType<object>}
+            columns={mergeColumns() as ColumnsType<object>}
           />
         </div>
       }
