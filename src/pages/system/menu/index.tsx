@@ -23,8 +23,6 @@ import BasicTable from '@/components/Table/BasicTable';
 import { filterFormItem, handleValuePropName } from '@/components/Form/utils/helper';
 import { Icon } from '@iconify/react';
 import { API_METHODS } from '@/utils/constants';
-import { useFiler } from '@/components/TableFilter/hooks/useFiler';
-import FilterButton from '@/components/TableFilter';
 import BasicCard from '@/components/Card/BasicCard';
 
 // 当前行数据
@@ -57,9 +55,7 @@ function Page() {
   const [searchData, setSearchData] = useState<FormData>({ ...initSearch });
   const [tableData, setTableData] = useState<FormData[]>([]);
   const [apiMethods, setApiMethods] = useState<APIMethodData[]>([{}]);
-  const [tableFilters, setTableFilters] = useState<string[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
-  const [handleFilterTable] = useFiler();
   const { permissions } = useCommonStore();
 
   // 权限前缀
@@ -86,14 +82,6 @@ function Page() {
   useEffect(() => {
     if (pagePermission.page) getPage();
   }, [pagePermission.page]);
-
-  /**
-   * 获取勾选表格数据
-   * @param checks - 勾选
-   */
-  const getTableChecks = (checks: string[]) => {
-    setTableFilters(checks);
-  };
 
   /**
    * 点击搜索
@@ -283,14 +271,9 @@ function Page() {
       </BasicCard>
 
       <BasicCard className='mt-10px'>
-        <FilterButton
-          columns={columns}
-          className='!mb-5px'
-          getTableChecks={getTableChecks}
-        />
         <BasicTable
           loading={isLoading}
-          columns={handleFilterTable(columns, tableFilters)}
+          columns={columns}
           dataSource={tableData}
         />
 
