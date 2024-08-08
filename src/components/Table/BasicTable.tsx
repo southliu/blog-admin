@@ -68,7 +68,8 @@ function BasicTable(props: Props) {
 
   // 合并列表
   const mergeColumns = () => {
-    const result = columns.map((col, index) => ({
+    const newColumns = handleFilterTable(columns, tableFilters);
+    const result = newColumns.map((col, index) => ({
       ...col,
       onHeaderCell: (column: ColumnType<object>) => ({
         width: column.width,
@@ -76,7 +77,7 @@ function BasicTable(props: Props) {
       }),
     }));
 
-    return handleFilterTable(result, tableFilters);
+    return result;
   };
 
   // 虚拟滚动操作值
