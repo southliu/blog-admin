@@ -14,16 +14,16 @@ export interface APIMethodData {
 
 const otherList: FormList[] = [];
 
-for (let i = 0; i < 30; i++) {
-  otherList.push({
-    label: `名称${i}`,
-    name: `label${i}`,
-    component: 'Input',
-    componentProps: {
-      maxLength: 200
-    }
-  })
-}
+// for (let i = 0; i < 30; i++) {
+//   otherList.push({
+//     label: `名称${i}`,
+//     name: `label${i}`,
+//     component: 'Input',
+//     componentProps: {
+//       maxLength: 200
+//     }
+//   })
+// }
 
 // 搜索数据
 export const searchList = (t: TFunction): FormList[] => [
