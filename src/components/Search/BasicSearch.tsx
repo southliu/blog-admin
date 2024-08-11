@@ -77,7 +77,7 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
 
       if (i < showNum) {
         item.hidden = false;
-        continue
+        continue;
       }
 
       item.hidden = !isExpand;

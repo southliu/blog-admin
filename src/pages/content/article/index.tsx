@@ -97,9 +97,9 @@ function Page() {
   }, [isRefreshPage]);
 
   /** 点击新增 */
-  const onCreate = () => {
-    navigate('/content/article/option?type=create');
-  };
+  // const onCreate = () => {
+  //   navigate('/content/article/option?type=create');
+  // };
 
   /**
    * 点击编辑

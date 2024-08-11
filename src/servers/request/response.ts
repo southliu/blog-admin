@@ -4,4 +4,4 @@
 
 export const ApiResult = {
   SuccessCode: 200,
-}
+};

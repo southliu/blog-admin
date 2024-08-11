@@ -1,6 +1,6 @@
 import type { FormData } from '#/form';
 import type { PagePermission } from '#/public';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { searchList, createList, tableColumns, type APIMethodData } from './model';
 import { type FormInstance, Button, Col, Form, Input, Row, Select, message } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -69,9 +69,25 @@ function Page() {
     delete: checkPermission(`${permissionPrefix}/delete`, permissions)
   };
 
+  /** 获取表格数据 */
+  const getPage = useCallback(async () => {
+    const params = { ...searchData, isAll: true };
+
+    try {
+      setLoading(true);
+      const res = await getMenuList(params);
+      const { code, data } = res;
+      if (Number(code) !== 200) return;
+      setTableData(data as unknown as FormData[]);
+    } finally {
+      setFetch(false);
+      setLoading(false);
+    }
+  }, [searchData]);
+
   useEffect(() => {
     if (isFetch) getPage();
-  }, [isFetch])
+  }, [getPage, isFetch]);
 
   useEffect(() => {
     form?.setFieldsValue?.(createData);
@@ -81,7 +97,7 @@ function Page() {
   // 首次进入自动加载接口数据
   useEffect(() => {
     if (pagePermission.page) getPage();
-  }, [pagePermission.page]);
+  }, [getPage, pagePermission.page]);
 
   /**
    * 点击搜索
@@ -135,22 +151,6 @@ function Page() {
   const closeCreate = () => {
     setCreateOpen(false);
     setApiMethods([{}]);
-  };
-
-  /** 获取表格数据 */
-  const getPage = async () => {
-    const params = { ...searchData, isAll: true };
-
-    try {
-      setLoading(true);
-      const res = await getMenuList(params);
-      const { code, data } = res;
-      if (Number(code) !== 200) return;
-      setTableData(data as unknown as FormData[]);
-    } finally {
-      setFetch(false);
-      setLoading(false);
-    }
   };
 
   /**
