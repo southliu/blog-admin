@@ -155,12 +155,12 @@ function Page() {
   };
 
   /** 点击新增 */
-  // const onCreate = () => {
-  //   setCreateOpen(true);
-  //   setCreateTitle(ADD_TITLE(t));
-  //   setCreateId('');
-  //   setCreateData(initCreate);
-  // };
+  const onCreate = () => {
+    setCreateOpen(true);
+    setCreateTitle(ADD_TITLE(t));
+    setCreateId('');
+    setCreateData(initCreate);
+  };
 
   /**
    * 点击编辑
@@ -283,9 +283,12 @@ function Page() {
       />
 
       <BasicTable
-        loading={isLoading}
+        isLoading={isLoading}
+        isCreate={pagePermission.create}
         columns={tableColumns(t, optionRender)}
         dataSource={tableData}
+        getPage={getPage}
+        onCreate={onCreate}
       />
 
       <BasicPagination

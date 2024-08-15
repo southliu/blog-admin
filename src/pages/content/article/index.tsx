@@ -183,9 +183,11 @@ function Page() {
       />
 
       <BasicTable
-        loading={isLoading}
+        isLoading={isLoading}
+        isCreate={pagePermission.create}
         columns={tableColumns(t, optionRender)}
         dataSource={tableData}
+        getPage={getPage}
       />
 
       <BasicPagination
