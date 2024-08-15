@@ -25,7 +25,7 @@ function BasicCard(props: Props) {
     >
       { children }
     </div>
-  )
+  );
 }
 
-export default BasicCard
+export default BasicCard;

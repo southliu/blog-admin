@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 function TableOperate() {
   return (
     <div>TableOperate</div>
-  )
+  );
 }
 
-export default TableOperate
+export default TableOperate;

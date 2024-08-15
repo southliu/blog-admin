@@ -100,7 +100,7 @@ function BasicTable(props: Props) {
   }, [virtualOptions]);
 
   // 只带拖拽功能组件
-  const components: Components = !!isVirtual ? virtualComponents : {
+  const components: Components = isVirtual ? virtualComponents : {
     header: {
       cell: ResizableTitle,
     }

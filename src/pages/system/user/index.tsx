@@ -2,7 +2,7 @@ import type { FormData } from '#/form';
 import type { DataNode } from 'antd/es/tree';
 import type { Key } from 'antd/es/table/interface';
 import type { PagePermission, TableOptions } from '#/public';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createList, searchList, tableColumns } from './model';
 import { type FormInstance, Button, message } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -78,14 +78,30 @@ function Page() {
     permission: checkPermission(`${permissionPrefix}/systems`, permissions)
   };
 
+  /** 获取表格数据 */
+  const getPage = useCallback(async () => {
+    const params = { ...searchData, page, pageSize };
+
+    try {
+      setLoading(true);
+      const { code, data } = await getUserPage(params);
+      if (Number(code) !== 200) return;
+      const { items, total } = data;
+      setTotal(total);
+      setTableData(items);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, pageSize, searchData]);
+
   useEffect(() => {
     if (isFetch) getPage();
-  }, [isFetch])
+  }, [getPage, isFetch]);
 
   // 首次进入自动加载接口数据
   useEffect(() => {
     if (pagePermission.page) getPage();
-  }, [pagePermission.page]);
+  }, [getPage, pagePermission.page]);
 
   /**
    * 点击搜索
@@ -139,12 +155,12 @@ function Page() {
   };
 
   /** 点击新增 */
-  const onCreate = () => {
-    setCreateOpen(true);
-    setCreateTitle(ADD_TITLE(t));
-    setCreateId('');
-    setCreateData(initCreate);
-  };
+  // const onCreate = () => {
+  //   setCreateOpen(true);
+  //   setCreateTitle(ADD_TITLE(t));
+  //   setCreateId('');
+  //   setCreateData(initCreate);
+  // };
 
   /**
    * 点击编辑
@@ -172,22 +188,6 @@ function Page() {
   /** 关闭新增/修改弹窗 */
   const closeCreate = () => {
     setCreateOpen(false);
-  };
-
-  /** 获取表格数据 */
-  const getPage = async () => {
-    const params = { ...searchData, page, pageSize };
-
-    try {
-      setLoading(true);
-      const { code, data } = await getUserPage(params);
-      if (Number(code) !== 200) return;
-      const { items, total } = data;
-      setTotal(total);
-      setTableData(items);
-    } finally {
-      setLoading(false);
-    }
   };
 
   /**
