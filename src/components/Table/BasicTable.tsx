@@ -1,44 +1,74 @@
 import type { ResizeCallbackData } from 'react-resizable';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
-import { type TableProps, Table, Skeleton } from 'antd';
-import { useFiler } from './hooks/useFiler';
+import { type TableProps, Table, Skeleton, Button, message } from 'antd';
 import { useMemo, useState, useEffect, useRef } from 'react';
+import { useFiler } from './hooks/useFiler';
+import { PlusOutlined, RedoOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import { getTableHeight, handleRowHeight, filterTableColumns } from './utils/helper';
 import ResizableTitle from './components/ResizableTitle';
 import useVirtualTable from './hooks/useVirtual';
-import FilterButton from './components/TableFilter';
+import TableFilter from './components/TableFilter';
 
 type Components = TableProps<object>['components']
 
 interface Props extends Omit<TableProps<object>, 'bordered'> {
+  isLoading?: boolean; // 是否加载
   isBordered?: boolean; // 是否开启边框
   isZebra?: boolean; // 是否开启斑马线
   isVirtual?: boolean; // 是否开启虚拟滚动
   isOperate?: boolean; // 是否开启顶部操作栏
+  isCreate?: boolean;
   scrollX?: number;
   scrollY?: number;
+  leftContent?: JSX.Element; // 左侧额外内容
+  rightContent?: JSX.Element; // 右侧额外内容
+  getPage: () => void;
+  onCreate?: () => void;
 }
 
 function BasicTable(props: Props) {
   const {
-    loading,
+    isLoading,
     isVirtual,
+    isCreate,
     isZebra = true,
     isBordered = true,
     isOperate = true,
     scrollX,
     scrollY,
     rowClassName,
-    size
+    size,
+    leftContent,
+    rightContent,
+    getPage,
+    onCreate
   } = props;
+  const { t } = useTranslation();
   const [handleFilterTable] = useFiler();
   const [columns, setColumns] = useState(filterTableColumns(props.columns as ColumnsType<object>));
   const tableRef = useRef<HTMLDivElement>(null);
   const [tableFilters, setTableFilters] = useState<string[]>([]);
 
+  // 清除自定义属性
+  const params: Partial<Props> = { ...props };
+  delete params.isLoading;
+  delete params.isVirtual;
+  delete params.isCreate;
+  delete params.isBordered;
+  delete params.isOperate;
+
   useEffect(() => {
     setColumns(filterTableColumns(props.columns as ColumnsType<object>));
   }, [props.columns]);
+
+  // 添加新增缺少方法警告
+  useEffect(() => {
+    if (isCreate && !onCreate) {
+      message.warning(t('public.createMethodWarning'));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCreate]);
 
   // 表格高度
   const tableHeight = getTableHeight(tableRef.current);
@@ -116,8 +146,13 @@ function BasicTable(props: Props) {
   /**
    * 处理行内样式
    */
-  const handleRowClassName: TableProps<object>['rowClassName'] = (record: object, index: number, indent: number) => {
-    const className = typeof rowClassName === 'string' ? rowClassName : rowClassName?.(record, index, indent);
+  const handleRowClassName: TableProps<object>['rowClassName'] = (
+    record: object,
+    index: number,
+    indent: number
+  ) => {
+    const className = typeof rowClassName === 'string' ?
+                      rowClassName : rowClassName?.(record, index, indent);
     const rowSize = `!h-${handleRowHeight(size)}px`;
 
     return `${className || ''} ${rowSize}`;
@@ -134,12 +169,37 @@ function BasicTable(props: Props) {
     >
       {
         isOperate &&
-        <div>
-          <FilterButton
-            columns={columns}
-            className='!mb-5px'
-            getTableChecks={getTableChecks}
-          />
+        <div className='flex justify-between !mb-10px'>
+          <div className='flex flex-wrap items-center'>
+            {
+              !!isCreate &&
+              <Button
+                type="primary"
+                className='mr-10px'
+                icon={<PlusOutlined />}
+                onClick={onCreate}
+              >
+                { t('public.create') }
+              </Button>
+            }
+            { leftContent }
+          </div>
+
+          <div className='flex flex-wrap items-center'>
+            { rightContent ? <div className='mr-10px'>{ rightContent }</div> : undefined }
+
+            <RedoOutlined
+              className="mr-10px transform rotate-270 cursor-pointer"
+              disabled={!!isLoading}
+              onClick={getPage}
+            />
+
+            <TableFilter
+              className='mr-10px'
+              columns={columns}
+              getTableChecks={getTableChecks}
+            />
+          </div>
         </div>
       }
       {
@@ -153,7 +213,7 @@ function BasicTable(props: Props) {
             size='small'
             rowKey='id'
             pagination={false}
-            loading={loading}
+            loading={isLoading}
             {...props}
             rowClassName={handleRowClassName}
             style={{

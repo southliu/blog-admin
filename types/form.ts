@@ -146,5 +146,5 @@ export interface FormList extends Omit<FormItemProps, 'labelCol' | 'wrapperCol'>
 
 // 搜索数据
 export interface SearchList extends FormList {
-  colSize?: number | string; // 栅格占位符，24位为一行
+  // TODO...
 }

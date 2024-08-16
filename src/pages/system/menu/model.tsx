@@ -1,4 +1,4 @@
-import type { FormList } from "#/form";
+import type { FormList, SearchList } from "#/form";
 import type { TFunction } from "i18next";
 import type { TableColumn, TableOptions } from '#/public';
 import { FORM_REQUIRED, EMPTY_VALUE } from '@/utils/config';
@@ -12,21 +12,21 @@ export interface APIMethodData {
   path?: string;
 }
 
-const otherList: FormList[] = [];
+const otherSearch: SearchList[] = [];
 
-// for (let i = 0; i < 30; i++) {
-//   otherList.push({
-//     label: `名称${i}`,
-//     name: `label${i}`,
-//     component: 'Input',
-//     componentProps: {
-//       maxLength: 200
-//     }
-//   })
-// }
+for (let i = 0; i < 30; i++) {
+  otherSearch.push({
+    label: `名称${i}`,
+    name: `label${i}`,
+    component: 'Input',
+    componentProps: {
+      maxLength: 200
+    }
+  });
+}
 
 // 搜索数据
-export const searchList = (t: TFunction): FormList[] => [
+export const searchList = (t: TFunction): SearchList[] => [
   {
     label: t('public.state'),
     name: 'status',
@@ -53,7 +53,7 @@ export const searchList = (t: TFunction): FormList[] => [
       options: MENU_TYPES
     }
   },
-  ...otherList,
+  ...otherSearch,
 ];
 
 /**

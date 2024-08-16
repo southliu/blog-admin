@@ -1,6 +1,6 @@
 import type { FormData, SearchList } from '#/form';
 import type { ColProps, FormInstance } from 'antd';
-import { type LegacyRef, ReactNode, forwardRef, useState } from 'react';
+import { type LegacyRef, ReactNode, forwardRef, useEffect, useState } from 'react';
 import { type FormProps, Button, Col, Flex } from 'antd';
 import { Form } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -42,6 +42,16 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [isExpand, setExpand] = useState(false);
+  const [isShowExpand, setShowExpand] = useState(isRowExpand);
+
+  useEffect(() => {
+    setShowExpand(isRowExpand);
+
+    if (isRowExpand) {
+      const showNum = defaultColCount * defaultRowExpand;
+      setShowExpand(showNum < list.length);
+    }
+  }, [defaultColCount, defaultRowExpand, isRowExpand, list.length]);
 
   // 清除多余参数
   const formProps = { ...props };
@@ -62,12 +72,22 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
     form?.submit();
   };
 
+  /** 获取搜索按钮flex状态 */
+  const getFlexCol = () => {
+    // 如果搜索按钮在最后一行第一个，则靠右显示
+    if (list?.length % defaultColCount === 0) {
+      return 'auto';
+    }
+
+    return isShowExpand ? 'auto' : undefined;
+  };
+
   /**
    * 处理列表
    * @param list - 列表
    */
   const filterList = (list: SearchList[]) => {
-    if (!isRowExpand) return list;
+    if (!isShowExpand) return list;
 
     // 默认显示个数
     const showNum = defaultColCount * defaultRowExpand;
@@ -143,7 +163,7 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
             ))
           }
 
-          <Col flex='auto'>
+          <Col flex={getFlexCol()}>
             <Flex justify='flex-end'>
               <div className='flex items-center flex-wrap'>
                 {
@@ -177,7 +197,7 @@ const BasicSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
                 { children }
 
                 {
-                  !!isRowExpand &&
+                  !!isShowExpand &&
                   <div
                     className='text-12px cursor-pointer color-#1677ff hover:color-#69b1ff'
                     onClick={() => {

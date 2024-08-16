@@ -272,9 +272,11 @@ function Page() {
 
       <BasicCard className='mt-10px'>
         <BasicTable
-          loading={isLoading}
+          isLoading={isLoading}
           columns={columns}
           dataSource={tableData}
+          getPage={getPage}
+          onCreate={onCreate}
         />
 
         <BasicModal
