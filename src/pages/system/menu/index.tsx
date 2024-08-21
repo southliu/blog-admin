@@ -275,6 +275,7 @@ function Page() {
           isLoading={isLoading}
           columns={columns}
           dataSource={tableData}
+          isCreate={pagePermission.create}
           getPage={getPage}
           onCreate={onCreate}
         />
