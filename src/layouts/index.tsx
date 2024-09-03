@@ -1,17 +1,13 @@
-import type { AppDispatch } from '@/stores';
 import { useToken } from '@/hooks/useToken';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useOutlet } from 'react-router-dom';
 import { Skeleton, message } from 'antd';
 import { Icon } from '@iconify/react';
 import { useDebounceFn } from 'ahooks';
-import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { versionCheck } from './utils/helper';
-import { useCommonStore } from '@/hooks/useCommonStore';
 import { getPermissions } from '@/servers/permissions';
-import { setPermissions, setUserInfo } from '@/stores/user';
-import { setMenuList, toggleCollapsed, togglePhone } from '@/stores/menu';
+import { useCommonStore } from '@/hooks/useCommonStore';
 import { getMenuList } from '@/servers/system/menu';
 import Menu from './components/Menu';
 import Header from './components/Header';
@@ -19,9 +15,9 @@ import Tabs from './components/Tabs';
 import Forbidden from '@/pages/403';
 import KeepAlive from 'react-activation';
 import styles from './index.module.less';
+import { useMenuStore, useUserStore } from '@/stores';
 
 function Layout() {
-  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
   const [getToken] = useToken();
   const { pathname, search } = useLocation();
@@ -30,6 +26,8 @@ function Layout() {
   const outlet = useOutlet();
   const [isLoading, setLoading] = useState(true);
   const [messageApi, contextHolder] = message.useMessage();
+  const { setPermissions, setUserInfo } = useUserStore(state => state);
+  const { setMenuList, toggleCollapsed, togglePhone } = useMenuStore(state => state);
 
   const {
     permissions,
@@ -46,9 +44,9 @@ function Layout() {
       setLoading(true);
       const { code, data } = await getPermissions({ refresh_cache: false });
       if (Number(code) !== 200) return;
-      const { userInfo, permissions } = data;
-      dispatch(setUserInfo(userInfo));
-      dispatch(setPermissions(permissions));
+      const { user, permissions } = data;
+      setUserInfo(user);
+      setPermissions(permissions);
     } catch(err) {
       console.error('获取用户数据失败:', err);
       setPermissions([]);
@@ -64,7 +62,7 @@ function Layout() {
       setLoading(true);
       const { code, data } = await getMenuList();
       if (Number(code) !== 200) return;
-      dispatch(setMenuList(data || []));
+      setMenuList(data || []);
     } finally {
       setLoading(false);
     }
@@ -83,7 +81,7 @@ function Layout() {
       getMenuData();
     }
   }, [getUserInfo, getMenuData, navigate, token, userId]);
-  
+
   // 监测是否需要刷新
   useEffect(() => {
     versionCheck(messageApi);
@@ -94,8 +92,8 @@ function Layout() {
   const handleIsPhone = useDebounceFn(() => {
     const isPhone = window.innerWidth <= 768;
     // 手机首次进来收缩菜单
-    if (isPhone) dispatch(toggleCollapsed(true));
-    dispatch(togglePhone(isPhone));
+    if (isPhone) toggleCollapsed(true);
+    togglePhone(isPhone);
   }, { wait: 500 });
 
   // 监听是否是手机端
