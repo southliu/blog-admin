@@ -17,11 +17,11 @@ import {
   createArticle,
   updateArticle,
 } from '@/servers/content/article';
-import BasicForm from '@/components/Form/BasicForm';
-import BasicContent from '@/components/Content/BasicContent';
+import BaseForm from '@/components/Form/BaseForm';
+import BaseContent from '@/components/Content/BaseContent';
 import SubmitBottom from '@/components/Bottom/SubmitBottom';
 import { useSingleTab } from '@/hooks/useSingleTab';
-import BasicCard from '@/components/Card/BasicCard';
+import BaseCard from '@/components/Card/BaseCard';
 import { usePublicStore, useTabsStore } from '@/stores';
 
 interface RecordType {
@@ -135,12 +135,12 @@ function Page() {
   };
 
   return (
-    <BasicContent isPermission={id ? pagePermission.update : pagePermission.create}>
+    <BaseContent isPermission={id ? pagePermission.update : pagePermission.create}>
       { contextHolder }
-      <BasicCard>
+      <BaseCard>
         <div className='mb-50px'>
           <Spin spinning={isLoading}>
-            <BasicForm
+            <BaseForm
               ref={createFormRef}
               list={createList(t)}
               data={createData}
@@ -149,14 +149,14 @@ function Page() {
             />
           </Spin>
         </div>
-      </BasicCard>
+      </BaseCard>
 
       <SubmitBottom
         isLoading={isLoading}
         goBack={() => goBack()}
         handleSubmit={handleSubmit}
       />
-    </BasicContent>
+    </BaseContent>
   );
 }
 

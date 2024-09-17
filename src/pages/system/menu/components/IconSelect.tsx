@@ -3,7 +3,7 @@ import { Select } from 'antd';
 import { menuIcons } from '@/utils/menuIcons';
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
-import BasicPagination from '@/components/Pagination/BasicPagination';
+import BasePagination from '@/components/Pagination/BasePagination';
 
 const pageSize = 70;
 
@@ -83,7 +83,7 @@ function IconInput(props: SelectProps) {
       </div>
 
       <div className='flex justify-end mt-5px mb-3px'>
-        <BasicPagination
+        <BasePagination
           current={page}
           pageSize={pageSize}
           showSizeChanger={false}

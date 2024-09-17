@@ -44,8 +44,8 @@ function Layout() {
       setLoading(true);
       const { code, data } = await getPermissions({ refresh_cache: false });
       if (Number(code) !== 200) return;
-      const { user, permissions } = data;
-      setUserInfo(user);
+      const { userInfo, permissions } = data;
+      setUserInfo(userInfo);
       setPermissions(permissions);
     } catch(err) {
       console.error('获取用户数据失败:', err);

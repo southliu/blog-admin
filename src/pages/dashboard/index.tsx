@@ -4,8 +4,8 @@ import { getDataTrends } from '@/servers/dashboard';
 import { searchList } from './model';
 import { useUnactivate } from 'react-activation';
 import { useTranslation } from 'react-i18next';
-import BasicSearch from '@/components/Search/BasicSearch';
-import BasicContent from '@/components/Content/BasicContent';
+import BaseSearch from '@/components/Search/BaseSearch';
+import BaseContent from '@/components/Content/BaseContent';
 import Bar from './components/Bar';
 import Line from './components/Line';
 import Block from './components/Block';
@@ -45,8 +45,8 @@ function Dashboard() {
   });
 
   return (
-    <BasicContent isPermission={true}>
-      <BasicSearch
+    <BaseContent isPermission={true}>
+      <BaseSearch
         list={searchList(t)}
         data={initSearch}
         isLoading={isLoading}
@@ -61,7 +61,7 @@ function Dashboard() {
         <Line />
         <Bar />
       </div>
-    </BasicContent>
+    </BaseContent>
   );
 }
 

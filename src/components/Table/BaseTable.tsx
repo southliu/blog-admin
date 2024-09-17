@@ -23,11 +23,11 @@ interface Props extends Omit<TableProps<object>, 'bordered'> {
   scrollY?: number;
   leftContent?: JSX.Element; // 左侧额外内容
   rightContent?: JSX.Element; // 右侧额外内容
-  getPage: () => void;
+  getPage?: () => void;
   onCreate?: () => void;
 }
 
-function BasicTable(props: Props) {
+function BaseTable(props: Props) {
   const {
     isLoading,
     isVirtual,
@@ -69,6 +69,14 @@ function BasicTable(props: Props) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCreate]);
+
+  // 添加分页缺少方法警告
+  useEffect(() => {
+    if (isOperate && !getPage) {
+      message.warning(t('public.getPageWarning'));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getPage]);
 
   // 表格高度
   const tableHeight = getTableHeight(tableRef.current);
@@ -234,4 +242,4 @@ function BasicTable(props: Props) {
   );
 }
 
-export default BasicTable;
+export default BaseTable;

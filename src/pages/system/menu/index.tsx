@@ -8,7 +8,7 @@ import { checkPermission } from '@/utils/permissions';
 import { useCommonStore } from '@/hooks/useCommonStore';
 import { ADD_TITLE, EDIT_TITLE } from '@/utils/config';
 import { getComponent } from '@/components/Form/utils/componentMap';
-import { BasicBtn, UpdateBtn, DeleteBtn } from '@/components/Buttons';
+import { BaseBtn, UpdateBtn, DeleteBtn } from '@/components/Buttons';
 import {
   getMenuList,
   getMenuById,
@@ -16,14 +16,14 @@ import {
   updateMenu,
   deleteMenu
 } from '@/servers/system/menu';
-import BasicContent from '@/components/Content/BasicContent';
-import BasicSearch from '@/components/Search/BasicSearch';
-import BasicModal from '@/components/Modal/BasicModal';
-import BasicTable from '@/components/Table/BasicTable';
+import BaseContent from '@/components/Content/BaseContent';
+import BaseSearch from '@/components/Search/BaseSearch';
+import BaseModal from '@/components/Modal/BaseModal';
+import BaseTable from '@/components/Table/BaseTable';
 import { filterFormItem, handleValuePropName } from '@/components/Form/utils/helper';
 import { Icon } from '@iconify/react';
 import { API_METHODS } from '@/utils/constants';
-import BasicCard from '@/components/Card/BasicCard';
+import BaseCard from '@/components/Card/BaseCard';
 
 // 当前行数据
 interface RowData {
@@ -231,13 +231,13 @@ function Page() {
     return <>
       {
         pagePermission.create === true &&
-        <BasicBtn
+        <BaseBtn
           className='mr-5px'
           isLoading={isLoading}
           onClick={() => onCreate((record as RowData).id)}
         >
           { t('system.addTreeChildren') }
-        </BasicBtn>
+        </BaseBtn>
       }
       {
         pagePermission.update === true &&
@@ -259,19 +259,19 @@ function Page() {
   }
 
   return (
-    <BasicContent isPermission={pagePermission.page}>
+    <BaseContent isPermission={pagePermission.page}>
       { contextHolder }
-      <BasicCard>
-        <BasicSearch
+      <BaseCard>
+        <BaseSearch
           list={searchList(t)}
           data={initSearch}
           isLoading={isLoading}
           handleFinish={onSearch}
         />
-      </BasicCard>
+      </BaseCard>
 
-      <BasicCard className='mt-10px'>
-        <BasicTable
+      <BaseCard className='mt-10px'>
+        <BaseTable
           isLoading={isLoading}
           columns={columns}
           dataSource={tableData}
@@ -280,7 +280,7 @@ function Page() {
           onCreate={onCreate}
         />
 
-        <BasicModal
+        <BaseModal
           width={800}
           title={createTitle}
           open={isCreateOpen}
@@ -364,9 +364,9 @@ function Page() {
               <span>新增</span>
             </Button>
           </Form>
-        </BasicModal>
-      </BasicCard>
-    </BasicContent>
+        </BaseModal>
+      </BaseCard>
+    </BaseContent>
   );
 }
 
