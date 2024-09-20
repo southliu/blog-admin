@@ -408,14 +408,10 @@ export function handleFilterMenus(menus: SideMenu[], level = 0): SideMenu[] {
       children = handleFilterMenus(item.children, newLevel);
     }
 
-    const data: Partial<SideMenu> = { ...item, sortNum: undefined };
+    const data: Partial<SideMenu> = { ...item };
     if (children?.length) (data as SideMenu).children = children;
     if (!data.key) data.key = getChildrenKey(data.children, level);
     delete data.labelEn;
-    delete data.sortNum;
-    delete data.createdAt;
-    delete data.updatedAt;
-    delete data.menuResource;
 
     currentItem.push(data as SideMenu);
   }
@@ -447,7 +443,7 @@ export function handleFilterNav(list: string[]): NavData[] {
  * @param permissions - 权限
  */
 function hasPermission(route: SideMenu, permissions: string[]): boolean {
-  return permissions?.includes(route?.permission || '');
+  return permissions?.includes(route?.rule || '');
 }
 
 /**
