@@ -1,4 +1,4 @@
- export default {
+export default {
   "extends": ["stylelint-config-standard", "stylelint-config-recess-order"],
   "ignoreFiles": [
     "**/*.js",
@@ -69,8 +69,6 @@
       }
     ],
     "font-family-no-missing-generic-family-keyword": null,
-    "selector-id-pattern": null,
-    "selector-class-pattern": null,
     "function-no-unknown": null,
     "import-notation": null,
     "media-feature-range-notation": null,
