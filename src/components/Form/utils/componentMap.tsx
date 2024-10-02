@@ -15,12 +15,14 @@ import {
   Slider,
   Upload
 } from 'antd';
+import {
+  BaseDatePicker,
+  BaseRangePicker,
+  BaseTimePicker,
+  BaseTimeRangePicker
+} from '@/components/Dates';
 import ApiSelect from '@/components/Selects/ApiSelect';
 import ApiTreeSelect from '@/components/Selects/ApiTreeSelect';
-import BaseDatePicker from '@/components/Dates/BaseDatePicker';
-import BaseRangePicker from '@/components/Dates/BaseRangePicker';
-import BaseTimePicker from '@/components/Dates/BaseTimePicker';
-import BaseTimeRangePicker from '@/components/Dates/BaseTimeRangePicker';
 import BaseTransfer from '@/components/Transfer/BaseTransfer';
 import PasswordStrength from '@/components/PasswordStrength';
 import WangEditor from '@/components/WangEditor';

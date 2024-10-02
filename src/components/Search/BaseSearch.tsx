@@ -1,13 +1,13 @@
-import type { FormData, SearchList } from '#/form';
 import type { ColProps, FormInstance } from 'antd';
+import type { FormData, FormList, SearchList } from '#/form';
 import { type LegacyRef, ReactNode, forwardRef, useEffect, useState } from 'react';
 import { type FormProps, Button, Col, Flex } from 'antd';
 import { Form } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { filterDayjs } from '@/components/Dates';
+import { getComponent } from '@/components/Form/utils/componentMap';
+import { handleValuePropName } from '@/components/Form/utils/helper';
 import { SearchOutlined, ClearOutlined, DownOutlined } from '@ant-design/icons';
-import { getComponent } from '../Form/utils/componentMap';
-import { handleValuePropName } from '../Form/utils/helper';
-import { filterDayjs } from '../Dates/utils/helper';
 
 interface Props extends FormProps {
   list: SearchList[];
@@ -131,7 +131,7 @@ const BaseSearch = forwardRef((props: Props, ref: LegacyRef<FormInstance>) => {
   const onFinish: FormProps['onFinish'] = values => {
     if (handleFinish) {
       // 将dayjs类型转为字符串
-      const params = filterDayjs(values, list);
+      const params = filterDayjs(values, list as FormList[]);
       handleFinish?.(params);
     }
   };
