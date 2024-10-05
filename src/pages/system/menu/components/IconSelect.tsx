@@ -104,7 +104,7 @@ function IconInput(props: SelectProps) {
       dropdownRender={contentRender}
       onDropdownVisibleChange={onDropdownVisibleChange}
     />
-  );  
+  );
 }
 
 export default IconInput;
